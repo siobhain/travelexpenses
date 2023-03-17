@@ -15,3 +15,8 @@ SHEET = GSPREAD_CLIENT.open('ccd-travel-expenses')
 emp = SHEET.worksheet('Employees')
 data = emp.get_all_values()
 print(data)
+
+"""
+ Collect trip information from the user
+ 
+"""
