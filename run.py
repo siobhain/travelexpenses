@@ -19,25 +19,79 @@ SHEET = GSPREAD_CLIENT.open('ccd-travel-expenses')
 
 # emp = SHEET.worksheet('EngineSize')
 
+def get_trip_data():
+"""
+    Ask user to enter 3 items to log the trip
+"""
+    print("You have chosen to enter trip details")
+    print("Please enter trip in the format : Name, Destination, Date in dd/mm")
+
+    while true:
+        user_input = input(
+            "Enter your trip details Example tarah, depo, 23/3 \n"
+            )
+        trip_input = user_input.split(",")  # Into list using , as delimiter
+        if len(trip_input) != 3:
+            raise ValueError(
+                f"3 items required, You entered {len(trip_input)}"
+                )
+            else:
+                if validate_trip_data(trip_input):
+                    print("Logging Trip")
+                    break
+
+
+def validate_trip_data(trip_input)
+
+"""
+    Three items input for trip
+    NAME - needs to match name in spreadsheet
+    DESTINATION - needs to match destination in spreadsheet
+    DATE - needs to be valid date 
+
+"""
+
+    name_input = trip_input[0]
+    destination_input = trip_input[1]
+    date_input = trip_input[2]
+    # verify name
+    is_name_in_spreadsheet(name_input,'EngineSize')
+    is_data_in_spreadsheet(destination_input,'Distance')
+    
+
+    enginesize_ws = SHEET.worksheet('EngineSize')
+    name_column = enginesize_ws.col_values(1)
+    # first column in EngineSize worksheet contains employee names
+    name_column.pop(0)
+    # remove element 0 from list which is the column title NAME
+
+    if name_input.lower() not in str(name_column).lower():
+
 """
  Collect trip information from the user
- """
+
+"""
+
+def is_data_in_spreadsheet
 
 print("Welcome to CCD Travel Expenses - 2023 Log & Approvals")
 print("Press L to log trip(s), Press A to approve trip(s), Press H for help")
-print("You have chosen to enter trip details, press # to return to 1st level")
-print("Please enter trip in the format : Name, Destination, Date in dd/mm")
-user_input = input("Enter your trip details Example Tarah, Depot, 23/3/23 \n")
+# print("You have chosen to enter trip details, press # to return to 1st level")
+# print("Please enter trip in the format : Name, Destination, Date in dd/mm")
+# user_input = input("Enter your trip details Example Tarah, Depot, 23/3/23 \n")
 
 # validate trip data that user input
 
-trip_input = user_input.split(",")  # puts into a list using , as delimiter
+#trip_input = user_input.split(",")  # puts into a list using , as delimiter
 
 # validate correct number of items
+# need a while loop for continuous entry
+
+get_trip_data():
 
 if len(trip_input) != 3:
     raise ValueError(
-        f"3 items required : Name,Dest,Date You entered {len(trip_input)}"
+        f"3 items required : Name, Dest, Date You entered {len(trip_input)}"
         )
 else:
     name_input = trip_input[0]
@@ -52,6 +106,7 @@ else:
 
     if name_input.lower() not in str(name_column).lower():
         print(f"Invalid Name : {name_input}, Choose from {name_column}")
+        #input again
     else:
         full_name = [
             name for name in name_column if name_input.lower() in name.lower()
@@ -111,7 +166,7 @@ else:
                      amount]
                     )
                 print("Updated worksheet")
-
+            # this except is only true is 1st try stmt fails
             except ValueError as e:
                 print(
                     f"Invalid date : {e} - {date_input} Enter valid dd/mm"
