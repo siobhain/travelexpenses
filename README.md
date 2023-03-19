@@ -31,7 +31,10 @@ tested in local console and in CI Heroku terminal
 
 ## Bugs
 
-no bugs remaining
+TypeError: Object of type datetime is not JSON serializable
+
+
+
 
 ### Validator TEsting
 PEP8 - no errors returned from pep8online.com

@@ -28,13 +28,10 @@ print("Press L to log trip(s), Press A to approve trip(s), Press H for help")
 print("You have chosen to enter trip details, press # to return to 1st level")
 print("Please enter trip in the format : Name, Destination, Date in dd/mm")
 user_input = input("Enter your trip details Example Tarah, Depot, 23/3/23 \n")
-print("you entered")
-print(user_input)
-print(len(user_input))
+
 # validate trip data that user input
 
 trip_input = user_input.split(",")  # puts into a list using , as delimiter
-print(trip_input)
 
 # validate correct number of items
 
@@ -77,35 +74,44 @@ else:
             print("Name & destination valid, now to check date")
             date_input_list = date_input.split("/")
             # puts each item input into a list using , as delimiter
-            print(date_input_list)
             try:
                 trip_date = datetime.datetime(
                     2023, int(date_input_list[1]), int(date_input_list[0])
                     )
-                print(f"date is {trip_date}")
-                print(trip_date.strftime("%B"))
                 rate_column = enginesize_ws.col_values(3)
                 rate_column.pop(0)
-                print(name_column, type(name_column))
-                print(rate_column, type(rate_column))
                 full_name_string = full_name[0]
                 destination_string = destination[0]
-                print(
-                    full_name_string, type(full_name_string),
-                    destination_string, type(destination_string)
-                     )
-                position = name_column.index(full_name_string)
-                print(position)
-                rate = rate_column[position]
-                print(position, rate)
                 print("Please ensure this trip you entered is correct:")
                 print(
-                    f"/t {full_name_string} to {destination_string} on \
-                        {(trip_date.strftime('%a %d %b %Y'))}"
-                        )
+                    f"\t{full_name_string} to {destination_string} on "
+                    f"{(trip_date.strftime('%a %d %b %Y'))}"
+                    )
                 # user_input = input("Press Y to proceed,
                 # or C to cancel & try again")
                 print("Press Y to proceed    or    C to cancel & try again")
+                position = name_column.index(full_name_string)
+                rate = rate_column[position]
+                position = destination_column.index(destination_string)
+                distance_column = distance_ws.col_values(2)
+                distance_column.pop(0)
+                print(distance_column)
+                distance = distance_column[position]
+                print(distance)
+                amount = round(float(rate) * int(distance))
+                print(amount)
+                print(
+                    datetime.datetime.now(), full_name_string,
+                    trip_date, amount
+                    )
+                travel_expenses_ws = SHEET.worksheet('TravelExpenses')
+                travel_expenses_ws.append_row(
+                    [(datetime.datetime.now()).strftime('%a %d %b %Y'),
+                     full_name_string, (trip_date.strftime('%a %d %b %Y')),
+                     amount]
+                    )
+                print("Updated worksheet")
+
             except ValueError as e:
                 print(
                     f"Invalid date : {e} - {date_input} Enter valid dd/mm"
