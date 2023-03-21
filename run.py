@@ -121,12 +121,15 @@ def create_trip_record(trip_input):
     #trip_record = list("PENDING", today_date,trip_date,trip_name,trip_destination,trip_amount)
 
     rate_in_cent_per_km = get_milage_rate(trip_name)
-    print(today, trip_date, trip_name, trip_destination, rate_in_cent_per_km)
+    distance = get_distance_in_km(trip_destination)
+    amount = float(rate_in_cent_per_km) * int(distance)
+
+    print(today, trip_date, trip_name, trip_destination, rate_in_cent_per_km, distance, amount)
 
 
 def get_milage_rate(name):
     """
-    This function returns the milage a]rate in cent per kilometer for the name send in
+    This function returns the milage rate in cent per kilometer for the name sent in
     the EngineSize worksheet has column headings for the employees that can claim travel
     NAME, ENGINE SIZE cc,Allowance per Km
     There is a row for each employee that can claim travel expanses
@@ -137,11 +140,28 @@ def get_milage_rate(name):
     print(employees_column)
     rate_column = enginesize_ws.col_values(3)
     print(rate_column)
-    row_number = employees_column.index(str(name))
+    name_string = name[0]
+    row_number = employees_column.index(name_string)
     print("in milage rate")
     print(rate_column,row_number)
-    return rate_column(row_number)
+    return rate_column[row_number]
     
+def get_distance_in_km(destination):
+    """
+    This function uses the destination send to it to #
+    find the distance of said destination from spreadsheet
+    """
+    distance_ws = SHEET.worksheet('Distance')
+    destination_column = distance_ws.col_values(1)
+    print(destination_column)
+    distance_column = distance_ws.col_values(2)
+    print(distance_column)
+    destination_string = destination[0]
+    row_number = destination_column.index(destination_string)
+    print(f"{destination_string} is at Row {row_number} in {destination_column}")
+    return distance_column[row_number]
+
+
 
 
 
