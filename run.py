@@ -22,31 +22,36 @@ SHEET = GSPREAD_CLIENT.open('ccd-travel-expenses')
 
 def get_main_menu():
     """
-    This function asks user to chose and 
+    This function asks user to enter a number from 1 to 4
+    The input string is checked for validation in a 'try'
+    The user will be asked to try again until a valid number is entered
+
     """
 
-    main_menu = ''' 
+    main_menu = '''
         1) Enter 1 to Log a trip for travel expenses
         2) Enter 2 to Generate a travel expenses report
         3. Enter 3 to Approve travel expenses
         4. Enter 4 to Exit
         '''
     print(main_menu)
-    user_input = ""
-    while user_input != '4':
+    user_choice = 0
+    while user_choice not in range(1,5):
         try:
             user_input = input("Enter 1, 2, 3 or 4 \n")
             if user_input == "":
-                raise ValueError(" Input is blank ")
+                raise ValueError(" Input is blank")
             elif not user_input.isnumeric():
-                raise ValueError(" Numeric value only ")
-            elif int(user_input) > 0 and int(user_input) < 5:
+                raise ValueError(" Numeric value only")
+            elif int(user_input) in range(1,5):
+                user_choice = int(user_input)
                 pass
             else:
-                raise ValueError(" Invalid numeric ")
+                raise ValueError(" Numeric out of range")
         except ValueError as e:        
             print(f" {e}, Please try again. \n")
 
+    return int(user_choice)
 
 def get_trip_data():
     """
@@ -61,7 +66,7 @@ def get_trip_data():
             "Enter your trip details Example tarah, depo, 13/3 \n"
             )
         try:
-            trip_input = user_input.split(",")  # Into list using , as delimiter
+            trip_input = user_input.split(",")  # Into list using , delimiter
             if user_input == "":
                 raise ValueError("Input is blank, ")
             elif len(trip_input) != 3:
@@ -139,27 +144,30 @@ def create_trip_record(trip_input):
     """
     Expand the data/
     perform processing before entry to spreadsheet
-    Needs to be in following order 
+    record needs to be in following order 
     STATUS,	SUBMITDATE,	TRAVELDATE,	NAME, DESTINATION, AMOUNT
     """
     # get full name and destination strings
-
     trip_name = expand_data(trip_input[0], 'EngineSize')
     trip_destination = expand_data(trip_input[1], 'Distance')
+
+    # convert dd/mm that was input to the gsheet date format 
     date_input_list = (trip_input[2]).split("/")
     trip_date = datetime.date(
         2023, (int((date_input_list[1]))), (int((date_input_list[0])))
         ).strftime('%a %d %b %Y')
-    today = (datetime.date.today()).strftime('%a %d %b %Y')
-    print(today, trip_date, trip_name, trip_destination)
-    
-    #trip_record = list("PENDING", today_date, trip_date,trip_name, trip_destination, trip_amount)
 
+    # today is the submit date     
+    today = (datetime.date.today()).strftime('%a %d %b %Y')
+
+    # retrieve the milage allowance for the employee
     rate_in_cent_per_km = get_milage_rate(trip_name)
+    # retrieve the distance for the trip
     distance = get_distance_in_km(trip_destination)
+    # calculate in €'s the amount due to employee
     amount = round(((float(rate_in_cent_per_km) * int(distance))/100), 2)
+    # Create the record that will be send to TravelExpenses worksheet
     trip_record = list(("PENDING", today, trip_date, trip_name[0], trip_destination[0], amount))
-    print(today, trip_date, trip_name, trip_destination, rate_in_cent_per_km, distance, amount)
     print(trip_record)
     return trip_record
 
@@ -171,15 +179,13 @@ def get_milage_rate(name):
     There is a row for each employee that can claim travel expanses
     Open woksheet, find index of employee to get rate for that employee
     """
+    
     enginesize_ws = SHEET.worksheet('EngineSize')
     employees_column = enginesize_ws.col_values(1)
-    print(employees_column)
     rate_column = enginesize_ws.col_values(3)
-    print(rate_column)
     name_string = name[0]
     row_number = employees_column.index(name_string)
-    print("in milage rate")
-    print(rate_column,row_number)
+
     return rate_column[row_number]
 
 
@@ -188,14 +194,12 @@ def get_distance_in_km(destination):
     This function uses the destination send to it to #
     find the distance of said destination from spreadsheet
     """
+    
     distance_ws = SHEET.worksheet('Distance')
     destination_column = distance_ws.col_values(1)
-    print(destination_column)
     distance_column = distance_ws.col_values(2)
-    print(distance_column)
     destination_string = destination[0]
     row_number = destination_column.index(destination_string)
-    print(f"{destination_string} is at Row {row_number} in {destination_column}")
     return distance_column[row_number]
 
 
@@ -223,6 +227,17 @@ def submit_trip_record(trip_details):
     travel_expenses_ws.append_row(trip_details)
     print(f"{trip_details} submitted to TravelExpenses worksheet")
 
+def print_report_options():   
+    """
+    This function asked user what report they want to view
+
+    """ 
+    report_menu = """
+    1) Enter 1 to view all PENDING travel expenses
+    2) 
+
+    repo
+
 def report_to_screen(worksheet_name):
     """
     This function will print worksheet details to screen
@@ -234,7 +249,10 @@ def report_to_screen(worksheet_name):
 
 print("\nWelcome to CCD Travel Expenses - 2023 Log & Approvals")
 
-get_main_menu()
+user_choice = get_main_menu()
+print("You picked" + str(user_choice))
+
+print_report_options()
 
 #trip_data_input = get_trip_data()
 # All data entered is valid and verified, let expand it
