@@ -22,6 +22,8 @@ existing & future
 ## Data Model
 A google sheet was used to store the trips. The sheet consists of 3 worksheets, "Employee", "Distance" & "Trip".  Employee and Distance are static worksheet that give python infor needed to calculate amount due for each trip.  Trip is dynamic worksheet updated via the colsol in 2 seperate processes.  First trip destails entered via console. 2nd Trip approved by manager so reimbursment can be made.
 
+did not use pandas as very simple and small spreadsheet only with 5/6 rows, travel expenses will of coarse grow 
+
 ## Testing
 manually tested by doing th following
 

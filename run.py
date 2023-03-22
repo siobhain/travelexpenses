@@ -3,6 +3,7 @@
 """
 import datetime
 import gspread
+from pprint import pprint
 
 from google.oauth2.service_account import Credentials
 
@@ -20,6 +21,7 @@ SHEET = GSPREAD_CLIENT.open('ccd-travel-expenses')
 
 # emp = SHEET.worksheet('EngineSize')
 
+
 def get_main_menu():
     """
     This function asks user to enter a number from 1 to 4
@@ -28,7 +30,7 @@ def get_main_menu():
 
     """
 
-    main_menu = '''
+    main_menu = '''MAIN MENU
         1) Enter 1 to Log a trip for travel expenses
         2) Enter 2 to Generate a travel expenses report
         3. Enter 3 to Approve travel expenses
@@ -36,22 +38,23 @@ def get_main_menu():
         '''
     print(main_menu)
     user_choice = 0
-    while user_choice not in range(1,5):
+    while user_choice not in range(1, 5):
         try:
             user_input = input("Enter 1, 2, 3 or 4 \n")
             if user_input == "":
                 raise ValueError(" Input is blank")
             elif not user_input.isnumeric():
                 raise ValueError(" Numeric value only")
-            elif int(user_input) in range(1,5):
+            elif int(user_input) in range(1, 5):
                 user_choice = int(user_input)
                 pass
             else:
                 raise ValueError(" Numeric out of range")
-        except ValueError as e:        
+        except ValueError as e:
             print(f" {e}, Please try again. \n")
 
     return int(user_choice)
+
 
 def get_trip_data():
     """
@@ -80,7 +83,7 @@ def get_trip_data():
         except ValueError as e:
             print(f"Invalid Data: {e}, Please try again. \n")
 
-    return trip_input   
+    return trip_input
 
 
 def validate_trip_data(trip_input):
@@ -88,15 +91,14 @@ def validate_trip_data(trip_input):
     Three items input for trip
     NAME - needs to match name in spreadsheet
     DESTINATION - needs to match destination in spreadsheet
-    DATE - needs to be valid date 
+    DATE - needs to be valid date
 
     """
     name_input = trip_input[0]
     destination_input = trip_input[1]
     date_input = trip_input[2]
     date_input_list = date_input.split("/")
-    
-    if verify_data(name_input, 'EngineSize'): 
+    if verify_data(name_input, 'EngineSize'):
         if verify_data(destination_input, 'Distance'):
             try:
                 trip_date = datetime.date(
@@ -113,17 +115,11 @@ def validate_trip_data(trip_input):
         print(f"Invalid Name : {name_input}")
         return False
     return True
-            
-
-"""
- Collect trip information from the user
-
-"""
 
 
 def verify_data(data_input, worksheet):
     """
-    This function check if data is in worksheet, used for employee name 
+    This function check if data is in worksheet, used for employee name
     and destination aa both in first column of spreadsheet
     """
     data_worksheet = SHEET.worksheet(worksheet)
@@ -144,20 +140,20 @@ def create_trip_record(trip_input):
     """
     Expand the data/
     perform processing before entry to spreadsheet
-    record needs to be in following order 
-    STATUS,	SUBMITDATE,	TRAVELDATE,	NAME, DESTINATION, AMOUNT
+    record needs to be in following order
+    STATUS SUBMITDATE NAME DESTINATION AMOUNT TRAVELDATE
     """
     # get full name and destination strings
     trip_name = expand_data(trip_input[0], 'EngineSize')
     trip_destination = expand_data(trip_input[1], 'Distance')
 
-    # convert dd/mm that was input to the gsheet date format 
+    # convert dd/mm that was input to the gsheet date format
     date_input_list = (trip_input[2]).split("/")
     trip_date = datetime.date(
         2023, (int((date_input_list[1]))), (int((date_input_list[0])))
         ).strftime('%a %d %b %Y')
 
-    # today is the submit date     
+    # today is the submit date
     today = (datetime.date.today()).strftime('%a %d %b %Y')
 
     # retrieve the milage allowance for the employee
@@ -167,19 +163,21 @@ def create_trip_record(trip_input):
     # calculate in €'s the amount due to employee
     amount = round(((float(rate_in_cent_per_km) * int(distance))/100), 2)
     # Create the record that will be send to TravelExpenses worksheet
-    trip_record = list(("PENDING", today, trip_date, trip_name[0], trip_destination[0], amount))
-    print(trip_record)
+    trip_record = list((
+        "PENDING", today, trip_name[0], trip_destination[0], amount, trip_date
+            ))
+    pprint(trip_record)
     return trip_record
+
 
 def get_milage_rate(name):
     """
-    This function returns the milage rate in cent per kilometer for the name sent in
-    the EngineSize worksheet has column headings for the employees that can claim travel
-    NAME, ENGINE SIZE cc,Allowance per Km
+    This function returns the milage rate in cent per kilometer for the name
+    sent in the EngineSize worksheet has column headings for the employees that 
+    can claim travel NAME, ENGINE SIZE cc,Allowance per Km
     There is a row for each employee that can claim travel expanses
     Open woksheet, find index of employee to get rate for that employee
     """
-    
     enginesize_ws = SHEET.worksheet('EngineSize')
     employees_column = enginesize_ws.col_values(1)
     rate_column = enginesize_ws.col_values(3)
@@ -194,7 +192,6 @@ def get_distance_in_km(destination):
     This function uses the destination send to it to #
     find the distance of said destination from spreadsheet
     """
-    
     distance_ws = SHEET.worksheet('Distance')
     destination_column = distance_ws.col_values(1)
     distance_column = distance_ws.col_values(2)
@@ -217,6 +214,7 @@ def expand_data(data_input, worksheet):
     print(f"Expand {data_input} to {full_data}")
     return full_data
 
+
 def submit_trip_record(trip_details):
     """
     This function updates the TravelExpenses worksheet with trip
@@ -227,30 +225,57 @@ def submit_trip_record(trip_details):
     travel_expenses_ws.append_row(trip_details)
     print(f"{trip_details} submitted to TravelExpenses worksheet")
 
-def print_report_options():   
+
+def print_report_options():
     """
     This function asked user what report they want to view
 
-    """ 
-    report_menu = """
-    1) Enter 1 to view all PENDING travel expenses
-    2) 
-
-    repo
-
-def report_to_screen(worksheet_name):
     """
-    This function will print worksheet details to screen
+    report_menu = """REPORT SECTION
+    1) Enter 1 to view all PENDING Travel Expenses
+    2) Enter 2 to view all Travel Expenses
+    3) Enter 3 to view all Employees approved for Travel Expenses
+    4) Enter 4 to exit
+    """
+    print(report_menu)
+    print("You chose PENDING report")
+    run_pending_report()
+
+
+def run_pending_report():
+    """
+    This function list all records in TravelExpense worksheet with
+    Status=PENDING
+    """
+    # STATUS is in 1st Column & is either PENDING or APPROVED or DECLINE
+    status_column = return_nth_column("TravelExpenses", 1)
+    number_pending = status_column.count("PENDING")
+    print(f" There are {number_pending} trips awaiting approval")
+
+    travel_expenses_ws = SHEET.worksheet("TravelExpenses")
+    all_trips = travel_expenses_ws.get_values('A:F')
+
+    pending_trip = [
+        trip for trip in all_trips if trip[0] == "PENDING"
+        ]
+
+    for record in pending_trip:
+        print(f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}")
+
+
+def return_nth_column(worksheet_name, n):
+    """
+    This function will return all values in column n of worksheet
     """
     worksheet = SHEET.worksheet(worksheet_name)
-    data = worksheet.get_all_records(worksheet)
-    print(data)
+    data = worksheet.col_values(n)
+    return data
 
 
 print("\nWelcome to CCD Travel Expenses - 2023 Log & Approvals")
 
-user_choice = get_main_menu()
-print("You picked" + str(user_choice))
+# user_choice = get_main_menu()
+# print("You picked" + str(user_choice))
 
 print_report_options()
 
@@ -266,4 +291,5 @@ print("adding this record")
 # gineSize')
 #trip_destination = expand_data(trip_data_input[1],'Distance')
 # Create Trip record to be added to spreadsheet
+
 
