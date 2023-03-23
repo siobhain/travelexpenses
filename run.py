@@ -1,7 +1,7 @@
 """
     CCD Travel Expenses Console App
 """
-import datetime
+from datetime import date
 import gspread
 from pprint import pprint
 
@@ -59,19 +59,24 @@ def get_main_menu():
 
 
 def get_trip_data():
+
     """
     Ask user to enter 3 items to log the trip
     """
 
     print("You have chosen to enter trip details")
-    print("Please enter trip in the format : Name, Destination, Date in dd/mm")
-
+    
     while True:
         user_input = input(
-            "Enter your trip details Example tarah, depo, 13/3 \n"
+            "\ Enter Trip details - Name, Destination, " +
+            "Travel Date    (ie 3 items separated by comma) \n" +
+            " Enter at least 3 letters from authorised Names & Destinations" +
+            " - Capitals or lower case it does not matter\n" +
+            " The 3rd item Date needs to be in the dd/mm format " +
+            " & a valid date month combination\n"
             )
         try:
-            trip_input = user_input.split(",")  # Into list using , delimiter
+            trip_input = user_input.split(",")  
             if user_input == "":
                 raise ValueError("Input is blank, ")
             elif len(trip_input) != 3:
@@ -103,7 +108,7 @@ def validate_trip_data(trip_input):
     if verify_data(name_input, 'EngineSize'):
         if verify_data(destination_input, 'Distance'):
             try:
-                trip_date = datetime.date(
+                trip_date = date(
                     2023, int(date_input_list[1]), int(date_input_list[0])
                     )
                 print(trip_date)
@@ -114,7 +119,8 @@ def validate_trip_data(trip_input):
             print(f"Invalid Destination : {destination_input}")
             return False
     else:
-        print(f"Invalid Name : {name_input}")
+        print(f"Invalid Name : {name_input} " +
+        "\n\tUse at least 3 letters from an item in the authorsed list")
         return False
     return True
 
@@ -122,19 +128,20 @@ def validate_trip_data(trip_input):
 def verify_data(data_input, worksheet):
     """
     This function check if data is in worksheet, used for employee name
-    and destination aa both in first column of spreadsheet
+    and destination aa both in first column of worksheet
     """
     data_worksheet = SHEET.worksheet(worksheet)
     data_column = data_worksheet.col_values(1)
-    # first column in EngineSize worksheet contains employee names
-    data_column.pop(0)
+    # 1st column in EngineSize worksheet contains employee names
+    # 1st column in Distance worksheet contains destination
+    col_title = data_column.pop(0)
     # remove element 0 from list which is the column title NAME
 
     if data_input.lower() in str(data_column).lower():
         print(f"found item {data_input}")
         return True
     else:
-        print(f"Choose from {data_column}")
+        print(f" Authorised {((col_title.lower()).title())} list : {data_column}")
         return False
 
 
@@ -151,12 +158,12 @@ def create_trip_record(trip_input):
 
     # convert dd/mm that was input to the gsheet date format
     date_input_list = (trip_input[2]).split("/")
-    trip_date = datetime.date(
+    trip_date = date(
         2023, (int((date_input_list[1]))), (int((date_input_list[0])))
         ).strftime('%a %d %b %Y')
 
     # today is the submit date
-    today = (datetime.date.today()).strftime('%a %d %b %Y')
+    today = (date.today()).strftime('%a %d %b %Y')
 
     # retrieve the milage allowance for the employee
     rate_in_cent_per_km = get_milage_rate(trip_name)
@@ -282,9 +289,9 @@ print("You picked" + str(user_choice))
 
 # print_report_options()
 
-#trip_data_input = get_trip_data()
+trip_data_input = get_trip_data()
 # All data entered is valid and verified, let expand it
-print("adding this record")
+print("get trip returned"+str(trip_data_input))
 
 #record = create_trip_record(trip_data_input)
 

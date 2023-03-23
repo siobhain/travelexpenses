@@ -21,8 +21,10 @@ This payment can be made, tax free, by the amount of business kilometres travell
 existing & future
 ## Data Model
 A google sheet was used to store the trips. The sheet consists of 3 worksheets, "Employee", "Distance" & "Trip".  Employee and Distance are static worksheet that give python infor needed to calculate amount due for each trip.  Trip is dynamic worksheet updated via the colsol in 2 seperate processes.  First trip destails entered via console. 2nd Trip approved by manager so reimbursment can be made.
-
+#### NOTES
 did not use pandas as very simple and small spreadsheet only with 5/6 rows, travel expenses will of coarse grow 
+Did want to have user inpit on same line as request and foiund i could use end="" as 2nd argument to print function BUT then thought that i ahve to put a /n on all print and input statments for some "quirk" on terminal so can't do this
+
 
 ## Testing
 manually tested by doing th following
