@@ -40,7 +40,9 @@ def get_main_menu():
     user_choice = 0
     while user_choice not in range(1, 5):
         try:
-            user_input = input("Enter 1, 2, 3 or 4 \n")
+            u_input = input("Enter 1, 2, 3 or 4 \n")
+            # remove spaces if any
+            user_input = u_input.replace(" ", "")
             if user_input == "":
                 raise ValueError(" Input is blank")
             elif not user_input.isnumeric():
@@ -250,17 +252,18 @@ def run_pending_report():
     # STATUS is in 1st Column & is either PENDING or APPROVED or DECLINE
     status_column = return_nth_column("TravelExpenses", 1)
     number_pending = status_column.count("PENDING")
-    print(f" There are {number_pending} trips awaiting approval")
-
-    travel_expenses_ws = SHEET.worksheet("TravelExpenses")
-    all_trips = travel_expenses_ws.get_values('A:F')
-
-    pending_trip = [
-        trip for trip in all_trips if trip[0] == "PENDING"
-        ]
-
-    for record in pending_trip:
-        print(f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}")
+    
+    if number_pending > 0:
+        print(f" There are {number_pending} awaiting approval")
+        travel_expenses_ws = SHEET.worksheet("TravelExpenses")
+        all_trips = travel_expenses_ws.get_values('A:F')
+        pending_trip = [
+            trip for trip in all_trips if trip[0] == "PENDING"
+            ]
+        for record in pending_trip:
+            print(f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}")
+    else:
+        print(" There are none awaiting approval")
 
 
 def return_nth_column(worksheet_name, n):
@@ -274,10 +277,10 @@ def return_nth_column(worksheet_name, n):
 
 print("\nWelcome to CCD Travel Expenses - 2023 Log & Approvals")
 
-# user_choice = get_main_menu()
-# print("You picked" + str(user_choice))
+user_choice = get_main_menu()
+print("You picked" + str(user_choice))
 
-print_report_options()
+# print_report_options()
 
 #trip_data_input = get_trip_data()
 # All data entered is valid and verified, let expand it
