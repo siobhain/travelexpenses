@@ -11,7 +11,7 @@ reimbursement to employee for work travel
 payment can be made tax free by the amoutn of business km travelled, journeys to/from home cannot be clainmed as mileage.
 There is a maximum mileage allowance per kilometre that the employer can reimburse tax-free. The mileage allowance rates depend on the type of vehicle. These maximum amounts are based on the Civil Service rates and can be found on the website of the Irish Revenue. Cars Motor travel rates 
 
-CCD is a fictional SME which repay 4 employees when they use their private car for business purposes. They follow the Civil Service rates from www.revenue.ie. 
+CCD is a fictional SME which reimburse 4 employees when they use their private car for business purposes. They follow the Civil Service rates from www.revenue.ie. The rate per KM is dependant on the engine size of the employees' car.
 This payment can be made, tax free, by the amount of business kilometres travelled. You can either:
 
 ![Inital Flowchart](docs/flowchart.PNG)
@@ -20,9 +20,9 @@ This payment can be made, tax free, by the amount of business kilometres travell
 ## Features
 existing & future
 ## Data Model
-A google sheet was used to store the trips. The sheet consists of 3 worksheets, "Employee", "Distance" & "Trip".  Employee and Distance are static worksheet that give python infor needed to calculate amount due for each trip.  Trip is dynamic worksheet updated via the colsol in 2 seperate processes.  First trip destails entered via console. 2nd Trip approved by manager so reimbursment can be made.
+A google sheet was used to store the trips. The sheet consists of 3 worksheets, "Employee", "Distance" & "Trip".  Employee and Distance are static worksheet that give python information needed to calculate the reimbursment amount per trip. Trip is dynamic worksheet updated via the console in 2 seperate processes.  First trip details entered via console. 2nd Trip approved by manager so reimbursment can be arranged.
 #### NOTES
-did not use pandas as very simple and small spreadsheet only with 5/6 rows, travel expenses will of coarse grow 
+did not use pandas as very simple and small spreadsheet only with 5/6 columns, travel expenses will of coarse grow 
 Did want to have user inpit on same line as request and foiund i could use end="" as 2nd argument to print function BUT then thought that i ahve to put a /n on all print and input statments for some "quirk" on terminal so can't do this
 
 
@@ -40,11 +40,11 @@ TypeError: Object of type datetime is not JSON serializable
 
 
 
-### Validator TEsting
+### Validator Testing
 PEP8 - no errors returned from pep8online.com
 
 ## Deployment
-The project was deployed using Code I mock terminal for Heroku
+The project was deployed using Code Institute mock terminal for Heroku
 
 Steps
 fork or clone this repo

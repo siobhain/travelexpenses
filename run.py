@@ -2,11 +2,9 @@
     CCD Travel Expenses Console App
 """
 from datetime import date
-import gspread
 from pprint import pprint
-
+import gspread
 from google.oauth2.service_account import Credentials
-
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -37,24 +35,39 @@ def get_main_menu():
         4. Enter 4 to Exit
         '''
     print(main_menu)
+    user_choice = prompt_user(4)
+    return user_choice
+
+
+def prompt_user(num):
+    """
+    This function
+    process users input from 1 to num
+
+    removes spaces from input
+    check for number between 1 nad num passed into the function
+    caters for all occurances of invalid input from nothing inout
+
+    """
     user_choice = 0
-    while user_choice not in range(1, 5):
+    # returns list of consecutive numbers 1 to num-1
+    num_list = [i for i in range(1, num)]
+    prompt = "Enter " + str(num_list).strip("[]") + " or " + str(num)
+    while user_choice not in range(1, num+1):
         try:
-            u_input = input("Enter 1, 2, 3 or 4 \n")
+            u_input = input(prompt)
             # remove spaces if any
             user_input = u_input.replace(" ", "")
             if user_input == "":
                 raise ValueError(" Input is blank")
             elif not user_input.isnumeric():
                 raise ValueError(" Numeric value only")
-            elif int(user_input) in range(1, 5):
+            elif int(user_input) in range(1, num+1):
                 user_choice = int(user_input)
-                pass
             else:
                 raise ValueError(" Numeric out of range")
         except ValueError as e:
             print(f" {e}, Please try again. \n")
-
     return int(user_choice)
 
 
@@ -65,10 +78,9 @@ def get_trip_data():
     """
 
     print("You have chosen to enter trip details")
-    
     while True:
         user_input = input(
-            "\ Enter Trip details - Name, Destination, " +
+            "\n Enter Trip details - Name, Destination, " +
             "Travel Date    (ie 3 items separated by comma) \n" +
             " Enter at least 3 letters from authorised Names & Destinations" +
             " - Capitals or lower case it does not matter\n" +
@@ -76,7 +88,7 @@ def get_trip_data():
             " & a valid date month combination\n"
             )
         try:
-            trip_input = user_input.split(",")  
+            trip_input = user_input.split(",")
             if user_input == "":
                 raise ValueError("Input is blank, ")
             elif len(trip_input) != 3:
@@ -120,7 +132,8 @@ def validate_trip_data(trip_input):
             return False
     else:
         print(f"Invalid Name : {name_input} " +
-        "\n\tUse at least 3 letters from an item in the authorsed list")
+              "\n\tUse at least 3 letters from an item in the authorsed list"
+              )
         return False
     return True
 
@@ -141,7 +154,9 @@ def verify_data(data_input, worksheet):
         print(f"found item {data_input}")
         return True
     else:
-        print(f" Authorised {((col_title.lower()).title())} list : {data_column}")
+        print(
+            f" Authorised {((col_title.lower()).title())} list : {data_column}"
+            )
         return False
 
 
@@ -182,7 +197,7 @@ def create_trip_record(trip_input):
 def get_milage_rate(name):
     """
     This function returns the milage rate in cent per kilometer for the name
-    sent in the EngineSize worksheet has column headings for the employees that 
+    sent in the EngineSize worksheet has column headings for the employees that
     can claim travel NAME, ENGINE SIZE cc,Allowance per Km
     There is a row for each employee that can claim travel expanses
     Open woksheet, find index of employee to get rate for that employee
@@ -235,20 +250,22 @@ def submit_trip_record(trip_details):
     print(f"{trip_details} submitted to TravelExpenses worksheet")
 
 
-def print_report_options():
+def run_report_menu():
     """
-    This function asked user what report they want to view
+    This function asked user what report they want to see
 
     """
-    report_menu = """REPORT SECTION
-    1) Enter 1 to view all PENDING Travel Expenses
-    2) Enter 2 to view all Travel Expenses
-    3) Enter 3 to view all Employees approved for Travel Expenses
-    4) Enter 4 to exit
+    report_menu = """REPORT MENU
+    1) Enter 1 to list PENDING  Travel Expense records
+    2) Enter 2 to list APPROVED Travel Expense records
+    3) Enter 3 to return to MAIN MENU OR EXIT
     """
     print(report_menu)
-    print("You chose PENDING report")
-    run_pending_report()
+
+    user_menu_choice = prompt_user(3)
+
+    print("You chose menu number " + user_menu_choice)
+    # run_pending_report()
 
 
 def run_pending_report():
@@ -259,7 +276,6 @@ def run_pending_report():
     # STATUS is in 1st Column & is either PENDING or APPROVED or DECLINE
     status_column = return_nth_column("TravelExpenses", 1)
     number_pending = status_column.count("PENDING")
-    
     if number_pending > 0:
         print(f" There are {number_pending} awaiting approval")
         travel_expenses_ws = SHEET.worksheet("TravelExpenses")
@@ -268,24 +284,26 @@ def run_pending_report():
             trip for trip in all_trips if trip[0] == "PENDING"
             ]
         for record in pending_trip:
-            print(f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}")
+            print(
+                f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
+                )
     else:
         print(" There are none awaiting approval")
 
 
-def return_nth_column(worksheet_name, n):
+def return_nth_column(worksheet_name, column_number):
     """
-    This function will return all values in column n of worksheet
+    This function will return all values in #column_number of worksheet
     """
     worksheet = SHEET.worksheet(worksheet_name)
-    data = worksheet.col_values(n)
+    data = worksheet.col_values(column_number)
     return data
 
 
 print("\nWelcome to CCD Travel Expenses - 2023 Log & Approvals")
 
-user_choice = get_main_menu()
-print("You picked" + str(user_choice))
+user_main_choice = get_main_menu() # PROBLEM saying user main is a constant
+print("You picked" + str(user_main_choice))
 
 # print_report_options()
 
@@ -301,5 +319,3 @@ print("get trip returned"+str(trip_data_input))
 # gineSize')
 #trip_destination = expand_data(trip_data_input[1],'Distance')
 # Create Trip record to be added to spreadsheet
-
-
