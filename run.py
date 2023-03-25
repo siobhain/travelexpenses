@@ -52,7 +52,7 @@ def prompt_user(num):
     user_choice = 0
     # returns list of consecutive numbers 1 to num-1
     num_list = [i for i in range(1, num)]
-    prompt = "Enter " + str(num_list).strip("[]") + " or " + str(num)
+    prompt = "Enter " + str(num_list).strip("[]") + " or " + str(num) + "\n"
     while user_choice not in range(1, num+1):
         try:
             u_input = input(prompt)
@@ -262,9 +262,9 @@ def run_report_menu():
     """
     print(report_menu)
 
-    user_menu_choice = prompt_user(3)
+    report_menu_choice = prompt_user(3)
 
-    print("You chose menu number " + user_menu_choice)
+    print("You chose report menu number " + int(report_menu_choice))
     # run_pending_report()
 
 
@@ -291,6 +291,29 @@ def run_pending_report():
         print(" There are none awaiting approval")
 
 
+def run_approved_report():
+    """
+    This function list all records in TravelExpense worksheet with
+    Status=PENDING
+    """
+    # STATUS is in 1st Column & is either PENDING or APPROVED or DECLINE
+    status_column = return_nth_column("TravelExpenses", 1)
+    number_pending = status_column.count("APPROVED")
+    if number_pending > 0:
+        print(f" There are {number_pending} APPROVED")
+        travel_expenses_ws = SHEET.worksheet("TravelExpenses")
+        all_trips = travel_expenses_ws.get_values('A:F')
+        pending_trip = [
+            trip for trip in all_trips if trip[0] == "APPROVED"
+            ]
+        for record in pending_trip:
+            print(
+                f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
+                )
+    else:
+        print(" There are no approved records")
+
+
 def return_nth_column(worksheet_name, column_number):
     """
     This function will return all values in #column_number of worksheet
@@ -302,20 +325,20 @@ def return_nth_column(worksheet_name, column_number):
 
 print("\nWelcome to CCD Travel Expenses - 2023 Log & Approvals")
 
-user_main_choice = get_main_menu() # PROBLEM saying user main is a constant
+user_main_choice = get_main_menu()  # PROBLEM saying user main is a constant
 print("You picked" + str(user_main_choice))
 
-# print_report_options()
+run_report_menu()
 
-trip_data_input = get_trip_data()
+# trip_data_input = get_trip_data()
 # All data entered is valid and verified, let expand it
-print("get trip returned"+str(trip_data_input))
+# print("get trip returned"+str(trip_data_input))
 
-#record = create_trip_record(trip_data_input)
+# record = create_trip_record(trip_data_input)
 
-#print(record)
-#submit_trip_record(record)
-#trip_name = expand_data(trip_data_input[0], 'En
+# print(record)
+# submit_trip_record(record)
+# trip_name = expand_data(trip_data_input[0], 'En
 # gineSize')
-#trip_destination = expand_data(trip_data_input[1],'Distance')
+# trip_destination = expand_data(trip_data_input[1],'Distance')
 # Create Trip record to be added to spreadsheet
