@@ -322,13 +322,33 @@ def return_nth_column(worksheet_name, column_number):
     data = worksheet.col_values(column_number)
     return data
 
+def main():
+    """ Main program loop
+    """
+
+    user_main_choice = get_main_menu()
+    # get choice back its type int 1 to 4
+    while user_main_choice != 4:
+        if user_main_choice == 3:
+            print("Manager Approvals")   
+        elif  user_main_choice == 2:
+            print("Run Report menu")
+        elif user_main_choice == 1:
+            print("Log a trip")
+        user_main_choice = get_main_menu()
+    
+    print(" Goodbye")
+
+
+    
 
 print("\nWelcome to CCD Travel Expenses - 2023 Log & Approvals")
+main()
 
-user_main_choice = get_main_menu()  # PROBLEM saying user main is a constant
-print("You picked" + str(user_main_choice))
+# user_main_choice = get_main_menu()  # PROBLEM saying user main is a constant
+# print("You picked" + str(user_main_choice))
 
-run_report_menu()
+# run_report_menu()
 
 # trip_data_input = get_trip_data()
 # All data entered is valid and verified, let expand it

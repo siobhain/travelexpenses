@@ -16,7 +16,33 @@ This payment can be made, tax free, by the amount of business kilometres travell
 
 ![Inital Flowchart](docs/flowchart.PNG)
 
-## Goal
+## Goal = UX/UX + user story
+
+*  the app should eb easy to navigate
+* info that appears on terminal should eb relevent to what user is doing at that time
+* instruction should help the user what info is to be entered
+*  the releven worksheets should be accessed when needed
+* the trip worksheet should eb updated with correct values
+* the reports shouls list the correct records
+
+### User stories 
+
+as a user i want to...
+
+* be able to submit a travel expenses record easily
+* I want to know reimbursement amount
+* Add several records in a row
+* run report to see what i just entered
+* run report to see whats already on datasheet for this month
+* see how much travel expenses are by month
+* see how many are awaiting approval
+
+### SCOPE
+for this implementation of the travel expenses i ahve planned the following features
+* display warning/error when user enters invalid input
+* app to calculate amoutn for each trip
+
+
 ## Features
 existing & future
 ## Data Model
@@ -24,21 +50,58 @@ A google sheet was used to store the trips. The sheet consists of 3 worksheets, 
 #### NOTES
 did not use pandas as very simple and small spreadsheet only with 5/6 columns, travel expenses will of coarse grow 
 Did want to have user inpit on same line as request and foiund i could use end="" as 2nd argument to print function BUT then thought that i ahve to put a /n on all print and input statments for some "quirk" on terminal so can't do this
+###
+OOP - need to mention that not used OOP as simple worksheet
+Did use CRUD & Custom error handling
+
+### manual testing - test each feature, each user story each purpose
+### Exception Handling
+on input
+
+## Testing What to test 
+#### manual
+ test each feature, each user story each purpose
+#### code validaiton incl screenshots pep8online with no errors or warnings
+#### error handling tests
+user submit empty innput
+ensure error message are informative
+
+ie
+I ahve implemented the validate_data method that is called at every step of the ordering process for validaitn input fo the suer, mentod can be adapted to number of menu items by changing vakue of its parameters
+the vlaue parameter gets the 
+this heature was tested by simulating the error
+
+blank input
+non numeric input
+..show screenshots
+#### test user stories
+table with user stories one column and testing on other column which in Tipsslideshow is just how to do what the user wants rather than how to test (and maybe outcome)
+
+### test features
+
+table with these headings
+feature action effect
+
+Real time information from the google spreadsheet
+tested by comparing the output from the terminal for X report with the content that exists at that time in the corresponding worksheet
+ & if there is changes to the worksheet that the ouytput to terminal is changed
+
+ so will need to confirm calculations are correct
+ confirm that ssheet is updated correctly
+ this si part of FEATURE testing
 
 
-## Testing
-manually tested by doing th following
 
-passed code through PEP8 linter & confirmed no problems
-Given invalid inputs : ie string when number expected, same trip twice
-tested in local console and in CI Heroku terminal
 
-## Bugs
+## Bugs record all bugs, state what was the problem & if solution include screenshots
+
 
 TypeError: Object of type datetime is not JSON serializable
 
+Future Features :
 
-
+if the client liked the app then i would suggest having more meangingful menu pick options  rather than numeric 1,2,3 ie A for Approve, P for Pending L for log a trip
+but this is just MVP to give client idea of what can be done
 
 ### Validator Testing
 PEP8 - no errors returned from pep8online.com
