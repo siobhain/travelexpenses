@@ -70,23 +70,28 @@ def prompt_user(num):
             print(f" {e}, Please try again. \n")
     return int(user_choice)
 
-def log_a_trip():
+def log_a_trip():  #  change this name
     """
     Asks user to log a trip
     """
-    print("\n CCD TRAVEL EXPENSE RECORDS 2023")
-    print("\n Enter following 3 items - separated by comma\n\n"+
-           "      Employee Name, Destination, Travel Date in dd/mm format\n" 
-            )
-           #  " Enter at least 3 letters from authorised Names & Destinations" +
-           #  " - Capitals or lower case it does not matter\n" +
-           #  " The 3rd item Date needs to be in the dd/mm format " +
-           #  " dd/mm 3/2 or 03/02 or 6/12 \n"
+    print("\n CCD TRAVEL EXPENSE RECORDS 2023\n")
 
+    valid_employees = return_nth_column("EngineSize",1)
+    valid_destinations = return_nth_column("Distance", 1)  
+  
+    print("\n Here you need Employee Name, Destination & Date of travel" +
+          "\n\n Valid Employees are :" + str(valid_employees).strip('[]') +
+          "\n Valid Destinations : " + str(valid_destinations).strip('[]') +
+          "\n Date of Travel should be in format dd/mm ex: 3/6 or 10/12" +
+          "\n\n Enter at least 3 letters from Employee Name & the Destination"+
+          "\n The App is not case sensitive so you can use upper or lowercase"
+          "\n Enter following 3 items - separated by comma\n\n" +
+          "      Employee Name, Destination, Travel Date in dd/mm format\n"
+          )
 
     while True:
         trip_input = get_trip_data()  
-        # data is validated and verified at this stage 
+        # data has been validated and verified at this stage 
         record = create_trip_record(trip_input)
         print(record)
         print("Submit Y/N")
@@ -175,17 +180,11 @@ def verify_data(data_input, worksheet):
     data_worksheet = SHEET.worksheet(worksheet)
     data_column = data_worksheet.col_values(1)
     # 1st column in EngineSize worksheet contains employee names
-    # 1st column in Distance worksheet contains destination
-    col_title = data_column.pop(0)
-    # remove element 0 from list which is the column title NAME
-
+    # 1st column in Distance worksheet contains destinations
+  
     if data_input.lower() in str(data_column).lower():
-        print(f"found item {data_input}")
         return True
     else:
-        print(
-            f" Authorised {((col_title.lower()).title())} list : {data_column}"
-            )
         return False
 
 
@@ -219,7 +218,7 @@ def create_trip_record(trip_input):
     trip_record = list((
         "PENDING", today, trip_name[0], trip_destination[0], amount, trip_date
             ))
-    pprint(trip_record)
+    #pprint(trip_record)
     return trip_record
 
 
@@ -345,7 +344,7 @@ def run_approved_report():
 
 def return_nth_column(worksheet_name, column_number):
     """
-    This function will return all values in #column_number of worksheet
+    This function will return all values in #column_number of worksheet_name
     """
     worksheet = SHEET.worksheet(worksheet_name)
     data = worksheet.col_values(column_number)
