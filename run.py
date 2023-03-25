@@ -70,38 +70,63 @@ def prompt_user(num):
             print(f" {e}, Please try again. \n")
     return int(user_choice)
 
-
-def get_trip_data():
-
+def log_a_trip():
     """
-    Ask user to enter 3 items to log the trip
+    Asks user to log a trip
     """
-
-    print("You have chosen to enter trip details")
-    while True:
-        user_input = input(
-            "\n Enter Trip details - Name, Destination, " +
-            "Travel Date    (ie 3 items separated by comma) \n" +
-            " Enter at least 3 letters from authorised Names & Destinations" +
-            " - Capitals or lower case it does not matter\n" +
-            " The 3rd item Date needs to be in the dd/mm format " +
-            " & a valid date month combination\n"
+    print("\n CCD TRAVEL EXPENSE RECORDS 2023")
+    print("\n Enter following 3 items - separated by comma\n\n"+
+           "      Employee Name, Destination, Travel Date in dd/mm format\n" 
             )
+           #  " Enter at least 3 letters from authorised Names & Destinations" +
+           #  " - Capitals or lower case it does not matter\n" +
+           #  " The 3rd item Date needs to be in the dd/mm format " +
+           #  " dd/mm 3/2 or 03/02 or 6/12 \n"
+
+
+    while True:
+        trip_input = get_trip_data()  
+        # data is validated and verified at this stage 
+        record = create_trip_record(trip_input)
+        print(record)
+        print("Submit Y/N")
+        answer = input()
+        if "Y" in answer.upper():
+            submit_trip_record(record)
+        print("Another trip to record? Y or N please ")
+        answer = input()
+        if "Y" not in answer.upper():
+            break
+    print("Back to MAIN MENU")    
+
+    
+def get_trip_data():
+    """
+    Ask user to enter 3 items to record the trip
+    """
+    while True:
+        user_input = input()
         try:
             trip_input = user_input.split(",")
             if user_input == "":
-                raise ValueError("Input is blank, ")
+                raise ValueError("Input is blank")
             elif len(trip_input) != 3:
-                raise ValueError(
-                    f"3 items required, You entered {len(trip_input)}"
-                    )
-            else:
-                if validate_trip_data(trip_input):
-                    print("Trip accepted, Logging details")
-                    break
+                raise ValueError(f"3 items required")
+            elif validate_trip_data(trip_input):
+                print("Trip accepted, Logging details")
+                break
+            # else:
+            #     print(
+            #         "Invalid Input Try Again \n ENTER  " +
+            #         "Employee Name, Destination, dd/mm"
+            #         )
         except ValueError as e:
-            print(f"Invalid Data: {e}, Please try again. \n")
-
+                print(f"Invalid Data: {e} Please try again\n")
+                print(
+                    "    Enter     Employee Name, Destination, " +
+                    "Travel Date in dd/mm format\n" 
+                    )
+                
     return trip_input
 
 
@@ -119,21 +144,25 @@ def validate_trip_data(trip_input):
     date_input_list = date_input.split("/")
     if verify_data(name_input, 'EngineSize'):
         if verify_data(destination_input, 'Distance'):
-            try:
-                trip_date = date(
-                    2023, int(date_input_list[1]), int(date_input_list[0])
-                    )
-                print(trip_date)
-            except ValueError as e:
-                print(f"{date_input} is Invalid : {e}")
-                return False
+            if "/" in date_input and len(date_input) in range(3,6):
+                try:
+                    trip_date = date(
+                        2023, int(date_input_list[1]), int(date_input_list[0])
+                        )
+                    print(trip_date)
+                except ValueError as e:
+                    print(f"{date_input} is Invalid : {e}, Try Again")
+                    return False
+            else:       
+                print(f"Invalid date : {date_input}, Try Again")
+                return False 
         else:
-            print(f"Invalid Destination : {destination_input}")
+            print(f"Invalid Destination : {destination_input}, Try Again")
             return False
     else:
         print(f"Invalid Name : {name_input} " +
-              "\n\tUse at least 3 letters from an item in the authorsed list"
-              )
+              "\n\tUse at least 3 letters from an item in the authorised list " +
+              " Try Again")
         return False
     return True
 
@@ -335,6 +364,7 @@ def main():
             print("Run Report menu")
         elif user_main_choice == 1:
             print("Log a trip")
+            log_a_trip()
         user_main_choice = get_main_menu()
     
     print(" Goodbye")

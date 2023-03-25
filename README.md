@@ -47,6 +47,8 @@ for this implementation of the travel expenses i ahve planned the following feat
 existing & future
 ## Data Model
 A google sheet was used to store the trips. The sheet consists of 3 worksheets, "Employee", "Distance" & "Trip".  Employee and Distance are static worksheet that give python information needed to calculate the reimbursment amount per trip. Trip is dynamic worksheet updated via the console in 2 seperate processes.  First trip details entered via console. 2nd Trip approved by manager so reimbursment can be arranged.
+
+datasheets prepopulated .. status data...authorised employees authorised destinations
 #### NOTES
 did not use pandas as very simple and small spreadsheet only with 5/6 columns, travel expenses will of coarse grow 
 Did want to have user inpit on same line as request and foiund i could use end="" as 2nd argument to print function BUT then thought that i ahve to put a /n on all print and input statments for some "quirk" on terminal so can't do this
