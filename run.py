@@ -94,10 +94,12 @@ def log_a_trip():  #  change this name
           "\n\t It is NOT case sensitive so you can use upper or lowercase"
 
           "\n\t Date of Travel to be in format dd/mm, Examples : 3/6 or 10/12"
-          
+          "\n\t The App will calculate reimbursement amount due to employee"
+          "\n\t based on distance travelled and car engine size, both these"
+          "\n\t figures are held in the database"
           "\n\n Now Please Enter the trip information separated by commas " +
           "in the following order"
-          "\n\n Employee Name, Destination, Travel Date in dd/mm format\n"
+          "\n Employee Name, Destination, Travel Date in dd/mm format\n"
           )
 
     while True:
@@ -105,10 +107,10 @@ def log_a_trip():  #  change this name
         # data has been validated and verified at this stage
         record = create_trip_record(trip_input)
         headings = return_header_row("TravelExpenses")
+        view_record = dict(zip(headings,record))
         print("This record has been created from the information you entered ")
-        print(headings)
-        print(record)
-        print("Are you sure you want to submit this record?, Y or N please")
+        pprint(view_record, sort_dicts=False)
+        print("Are you happy to submit this record?, Y or N please")
         answer = input()
         if "Y" in answer.upper():
             submit_trip_record(record)
@@ -134,22 +136,18 @@ def get_trip_data():
             elif len(trip_input[0].strip()) < 3:
                 raise ValueError(f"At least 3 letters from Employee required")
             elif len(trip_input[1].strip()) < 3:
-                raise ValueError(f"At least 3 letters from Destination required")
+                raise ValueError(f"At least 3 Destination letters required")
             elif validate_trip_data(trip_input):
-                print("Trip details accepted, Logging it")
+                print("Trip details are accepted, Constructing the record...")
                 break
-            # else:
-            #     print(
-            #         "Invalid Input Try Again \n ENTER  " +
-            #         "Employee Name, Destination, dd/mm"
-            #         ) 
+            else:   # This else should never be entered but in case there are use cases there are cases i ahve not catered for 
+                print(
+                    "Invalid Input Try Again \n ENTER  " +
+                    "Employee Name, Destination, Date of Travel"
+                    ) 
         except ValueError as e:
                 print(f"Invalid Input: {e} Please try again\n")
-                print(
-                    "    Enter Employee Name, Destination, " +
-                    "Travel Date in dd/mm format\n" 
-                    )
-                
+                print("Enter Employee Name, Destination, Travel Date")
     return trip_input
 
 
@@ -172,18 +170,21 @@ def validate_trip_data(trip_input):
                     trip_date = date(
                         2023, int(date_input_list[1]), int(date_input_list[0])
                         )
-                    print(trip_date)
                 except ValueError as e:
-                    print(f"{date_input} is Invalid : {e}, Try Again")
+                    print(f"{date_input} is Invalid : {e}, Try Again, Enter")
+                    print("Employee Name, Destination, Travel Date\n")
                     return False
             else:       
-                print(f"Invalid date : {date_input}, Try Again")
+                print(f"Invalid date : {date_input}, Try Again, Please Enter")
+                print("Employee Name, Destination, Travel Date\n")
                 return False 
         else:
             print(f"Invalid Destination : {destination_input}, Try Again")
+            print("Enter Employee Name, Destination, Travel Date\n")
             return False
     else:
-        print(f"Invalid Employee : {name_input}, Try Again")
+        print(f"Invalid Employee : {name_input}, Try Again, Please Enter")
+        print("Employee Name, Destination, Travel Date\n")
         return False
     return True
 
@@ -233,9 +234,8 @@ def create_trip_record(trip_input):
     amount = round(((float(rate_in_cent_per_km) * int(distance))/100), 2)
     # Create the record that will be send to TravelExpenses worksheet
     trip_record = list((
-        "PENDING", today, trip_name[0], trip_destination[0], amount, trip_date
+        "Pending", today, trip_name[0], trip_destination[0], amount, trip_date
             ))
-    #pprint(trip_record)
     return trip_record
 
 
@@ -266,6 +266,7 @@ def get_distance_in_km(destination):
     distance_column = distance_ws.col_values(2)
     destination_string = destination[0]
     row_number = destination_column.index(destination_string)
+    
     return distance_column[row_number]
 
 
@@ -281,7 +282,7 @@ def expand_data(data_input, worksheet):
     full_data = [
         item for item in data_column if data_input.lower() in item.lower()
         ]
-    print(f"You entered {data_input} which has been matched with {full_data}")
+    print(f"FYI : You entered {data_input} which when parsed is {full_data}")
     return full_data
 
 def return_header_row(worksheet_name):
@@ -301,7 +302,7 @@ def submit_trip_record(trip_details):
 
     travel_expenses_ws = SHEET.worksheet('TravelExpenses')
     travel_expenses_ws.append_row(trip_details)
-    print("Record submitted to TravelExpenses worksheet")
+    print("Record submitted to database")
 
 
 def run_report_menu():
@@ -325,17 +326,17 @@ def run_report_menu():
 def run_pending_report():
     """
     This function list all records in TravelExpense worksheet with
-    Status=PENDING
+    Status=Pending
     """
     # STATUS is in 1st Column & is either PENDING or APPROVED or DECLINE
     status_column = return_nth_column("TravelExpenses", 1)
-    number_pending = status_column.count("PENDING")
+    number_pending = status_column.count("Pending")
     if number_pending > 0:
         print(f" There are {number_pending} awaiting approval")
         travel_expenses_ws = SHEET.worksheet("TravelExpenses")
         all_trips = travel_expenses_ws.get_values('A:F')
         pending_trip = [
-            trip for trip in all_trips if trip[0] == "PENDING"
+            trip for trip in all_trips if trip[0] == "Pending"
             ]
         for record in pending_trip:
             print(
