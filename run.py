@@ -118,7 +118,7 @@ def log_a_trip():  #  change this name
         answer = input()
         if "Y" not in answer.upper():
             break
-    print("Back to MAIN MENU")    
+    return    
 
     
 def get_trip_data():
@@ -310,25 +310,33 @@ def run_report_menu():
     This function asked user what report they want to see
 
     """
-    report_menu = """REPORT MENU
+    report_menu = """\nREPORT MENU
     1) Enter 1 to list PENDING  Travel Expense records
     2) Enter 2 to list APPROVED Travel Expense records
     3) Enter 3 to return to MAIN MENU
     """
     print(report_menu)
-
     report_menu_choice = prompt_user(3)
 
-    print("You chose report menu number " + str(report_menu_choice))
-    run_pending_report()
+    while report_menu_choice != 3:
+        if report_menu_choice == 2:
+            print("Manager Approvals")
+            run_approved_report()  
+        elif report_menu_choice == 1:
+            print("Pending Report")
+            run_pending_report()
+        print(report_menu)
+        report_menu_choice = prompt_user(3)
 
+    return
+        
 
 def run_pending_report():
     """
     This function list all records in TravelExpense worksheet with
     Status=Pending
     """
-    # STATUS is in 1st Column & is either PENDING or APPROVED or DECLINE
+    # STATUS is in 1st Column & is either Pending or Approved or Decline
     status_column = return_nth_column("TravelExpenses", 1)
     number_pending = status_column.count("Pending")
     if number_pending > 0:
@@ -338,12 +346,15 @@ def run_pending_report():
         pending_trip = [
             trip for trip in all_trips if trip[0] == "Pending"
             ]
+        heading = return_header_row("TravelExpenses")
+        print(f"\t{heading[2]}\t TO\t{heading[5][0:10]}   {heading[4]}")
         for record in pending_trip:
             print(
                 f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
                 )
     else:
         print(" There are no records awaiting approval")
+    return pending_trip
 
 
 def run_approved_report():
@@ -353,20 +364,21 @@ def run_approved_report():
     """
     # STATUS is in 1st Column & is either PENDING or APPROVED or DECLINE
     status_column = return_nth_column("TravelExpenses", 1)
-    number_pending = status_column.count("APPROVED")
-    if number_pending > 0:
-        print(f" There are {number_pending} APPROVED")
+    number_approved = status_column.count("Approved")
+    if number_approved > 0:
+        print(f" There are {number_pending} Approved")
         travel_expenses_ws = SHEET.worksheet("TravelExpenses")
         all_trips = travel_expenses_ws.get_values('A:F')
-        pending_trip = [
-            trip for trip in all_trips if trip[0] == "APPROVED"
+        approved_trip = [
+            trip for trip in all_trips if trip[0] == "Approved"
             ]
-        for record in pending_trip:
+        for record in approved_trip:
             print(
                 f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
                 )
     else:
         print(" There are no approved records")
+    return 
 
 
 def return_nth_column(worksheet_name, column_number):
@@ -376,6 +388,25 @@ def return_nth_column(worksheet_name, column_number):
     worksheet = SHEET.worksheet(worksheet_name)
     data = worksheet.col_values(column_number)
     return data
+
+def approves_pending_records():
+    """
+    This function display all pending records to the user
+    and gives them the choice of approving all together or
+    one by one
+    """
+
+    pending_records = run_pending_report()
+    number_pending = len(pending_records)
+    if number_pending > 1
+        print(f"There are {number_pending} records")
+        print("Do you want to approve all records at once?, Enter Y or N")
+        answer = input()
+        if "Y" in answer.upper():
+            print("All records Approved")
+        else for i < number_pending
+            
+
 
 def main():
     """ Main program loop
@@ -387,7 +418,6 @@ def main():
         if user_main_choice == 3:
             print("Manager Approvals")   
         elif  user_main_choice == 2:
-            print("Run Report menu")
             run_report_menu()
         elif user_main_choice == 1:
             log_a_trip()
