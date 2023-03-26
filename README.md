@@ -126,6 +126,8 @@ google.oauth2.service_account : Credentials : used to validate and grant access 
 lucid - flow charts
 
 ## Credits
+
+Gspread documentation https://docs.gspread.org/en/v5.7.0/
 CI for the mock terminal
 
 

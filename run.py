@@ -81,20 +81,22 @@ def log_a_trip():  #  change this name
     valid_destinations = return_nth_column("Distance", 1)
     valid_destinations.pop(0)
   
-    print("Here you will need Employee Name, Destination & Date of travel " +
+    print("Here you need Employee Name, Destination & Date of travel " +
           "to record the trip"
           "\n\n Authorised Employees are : " + 
           str(valid_employees).strip('[]').replace("'","") +
           "\n Valid Destinations are   : " + 
           str(valid_destinations).strip('[]').replace("'","") +
-          "\n NOTES\n\t You do not need to enter the full name or destination, "
+          "\n\t PLEASE NOTE"
+          "\n\t You do not need to enter the full name or destination"
           "\n\t A substring of at least 3 letters of either will suffice"
           "\n\t The App will expand the substring to its full format & " +
           "\n\t It is NOT case sensitive so you can use upper or lowercase"
 
-          "\n\t Date of Travel should be in format dd/mm, Example : 3/6 or 10/12"
+          "\n\t Date of Travel to be in format dd/mm, Examples : 3/6 or 10/12"
           
-          "\n\n Now enter the trip information separated by commas to log a trip"
+          "\n\n Now Please Enter the trip information separated by commas " +
+          "in the following order"
           "\n\n Employee Name, Destination, Travel Date in dd/mm format\n"
           )
 
@@ -102,7 +104,9 @@ def log_a_trip():  #  change this name
         trip_input = get_trip_data()  
         # data has been validated and verified at this stage
         record = create_trip_record(trip_input)
-        print("This record has been created from the informaiton you entered ")
+        headings = return_header_row("TravelExpenses")
+        print("This record has been created from the information you entered ")
+        print(headings)
         print(record)
         print("Are you sure you want to submit this record?, Y or N please")
         answer = input()
@@ -179,9 +183,7 @@ def validate_trip_data(trip_input):
             print(f"Invalid Destination : {destination_input}, Try Again")
             return False
     else:
-        print(f"Invalid Name : {name_input} " +
-              "\n\tUse at least 3 letters from an item in the authorised list " +
-              " Try Again")
+        print(f"Invalid Employee : {name_input}, Try Again")
         return False
     return True
 
@@ -213,7 +215,7 @@ def create_trip_record(trip_input):
     trip_name = expand_data(trip_input[0].strip(), 'EngineSize')
     trip_destination = expand_data(trip_input[1].strip(), 'Distance')
 
-    # convert dd/mm that was input to the gsheet date format
+    # convert dd/mm that was input to format held in gsheet
     date_input_list = (trip_input[2].strip()
     ).split("/")
     trip_date = date(
@@ -241,7 +243,7 @@ def get_milage_rate(name):
     """
     This function returns the milage rate in cent per kilometer for the name
     sent in the EngineSize worksheet has column headings for the employees that
-    can claim travel NAME, ENGINE SIZE cc,Allowance per Km
+    can claim travel NAME, ENGINE SIZE cc, Allowance per Km
     There is a row for each employee that can claim travel expanses
     Open woksheet, find index of employee to get rate for that employee
     """
@@ -270,6 +272,7 @@ def get_distance_in_km(destination):
 def expand_data(data_input, worksheet):
     """
     This function takes the user input shorthand/substring
+    & matches with an existing data in spreadsheet
     and returns the full item/longhand stored in spreadsheet
     """
     data_worksheet = SHEET.worksheet(worksheet)
@@ -278,8 +281,16 @@ def expand_data(data_input, worksheet):
     full_data = [
         item for item in data_column if data_input.lower() in item.lower()
         ]
-    print(f"Expand {data_input} to {full_data}")
+    print(f"You entered {data_input} which has been matched with {full_data}")
     return full_data
+
+def return_header_row(worksheet_name):
+    """
+    This function returns the values of the 1st row of the worksheet send in 
+    """
+    the_ws = SHEET.worksheet(worksheet_name)
+    headings = the_ws.row_values(1)
+    return headings
 
 
 def submit_trip_record(trip_details):
@@ -290,7 +301,7 @@ def submit_trip_record(trip_details):
 
     travel_expenses_ws = SHEET.worksheet('TravelExpenses')
     travel_expenses_ws.append_row(trip_details)
-    print(f"{trip_details} submitted to TravelExpenses worksheet")
+    print("Record submitted to TravelExpenses worksheet")
 
 
 def run_report_menu():
@@ -301,14 +312,14 @@ def run_report_menu():
     report_menu = """REPORT MENU
     1) Enter 1 to list PENDING  Travel Expense records
     2) Enter 2 to list APPROVED Travel Expense records
-    3) Enter 3 to return to MAIN MENU OR EXIT
+    3) Enter 3 to return to MAIN MENU
     """
     print(report_menu)
 
     report_menu_choice = prompt_user(3)
 
-    print("You chose report menu number " + int(report_menu_choice))
-    # run_pending_report()
+    print("You chose report menu number " + str(report_menu_choice))
+    run_pending_report()
 
 
 def run_pending_report():
@@ -331,7 +342,7 @@ def run_pending_report():
                 f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
                 )
     else:
-        print(" There are none awaiting approval")
+        print(" There are no records awaiting approval")
 
 
 def run_approved_report():
@@ -376,8 +387,8 @@ def main():
             print("Manager Approvals")   
         elif  user_main_choice == 2:
             print("Run Report menu")
+            run_report_menu()
         elif user_main_choice == 1:
-            print("Log a trip")
             log_a_trip()
         user_main_choice = get_main_menu()
     
@@ -388,21 +399,3 @@ def main():
 
 print("\nWelcome to CCD Travel Expenses - 2023 Log & Approvals")
 main()
-
-# user_main_choice = get_main_menu()  # PROBLEM saying user main is a constant
-# print("You picked" + str(user_main_choice))
-
-# run_report_menu()
-
-# trip_data_input = get_trip_data()
-# All data entered is valid and verified, let expand it
-# print("get trip returned"+str(trip_data_input))
-
-# record = create_trip_record(trip_data_input)
-
-# print(record)
-# submit_trip_record(record)
-# trip_name = expand_data(trip_data_input[0], 'En
-# gineSize')
-# trip_destination = expand_data(trip_data_input[1],'Distance')
-# Create Trip record to be added to spreadsheet
