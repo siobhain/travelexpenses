@@ -77,28 +77,36 @@ def log_a_trip():  #  change this name
     print("\n CCD TRAVEL EXPENSE RECORDS 2023\n")
 
     valid_employees = return_nth_column("EngineSize",1)
-    valid_destinations = return_nth_column("Distance", 1)  
+    valid_employees.pop(0)
+    valid_destinations = return_nth_column("Distance", 1)
+    valid_destinations.pop(0)
   
-    print("\n Here you need Employee Name, Destination & Date of travel" +
-          "\n\n Valid Employees are :" + str(valid_employees).strip('[]') +
-          "\n Valid Destinations : " + str(valid_destinations).strip('[]') +
-          "\n Date of Travel should be in format dd/mm ex: 3/6 or 10/12" +
-          "\n\n Enter at least 3 letters from Employee Name & the Destination"+
-          "\n The App is not case sensitive so you can use upper or lowercase"
-          "\n Enter following 3 items - separated by comma\n\n" +
-          "      Employee Name, Destination, Travel Date in dd/mm format\n"
+    print("Here you will need Employee Name, Destination & Date of travel" +
+          "to record the trip"
+          "\n\n Authorised Employees are : " + 
+          str(valid_employees).strip('[]').replace("'","") +
+          "\n Valid Destinations are : " + 
+          str(valid_destinations).strip('[]').replace("'","") +
+          "\n Date of Travel should be in format dd/mm, Example : 3/6 or 10/12"
+          "\nNOTES\n You do not need to enter the full name or destination, "+
+          "A substring of at least 3 letters of either will suffice"
+          "\n The App will expand the substring to its full format & " +
+          "It is NOT case sensitive so you can use upper or lowercase"
+          "\n\t Now enter the trip information separated by commas to log a trip"
+          "\n\t\t Employee Name, Destination, Travel Date in dd/mm format\n"
           )
 
     while True:
         trip_input = get_trip_data()  
-        # data has been validated and verified at this stage 
+        # data has been validated and verified at this stage
         record = create_trip_record(trip_input)
+        print("This record has been created from the informaiton you entered ")
         print(record)
-        print("Submit Y/N")
+        print("Are you sure you want to submit this record?, Y or N please")
         answer = input()
         if "Y" in answer.upper():
             submit_trip_record(record)
-        print("Another trip to record? Y or N please ")
+        print("Do you have another trip to record? Y or N please ")
         answer = input()
         if "Y" not in answer.upper():
             break
@@ -117,18 +125,22 @@ def get_trip_data():
                 raise ValueError("Input is blank")
             elif len(trip_input) != 3:
                 raise ValueError(f"3 items required")
+            elif len(trip_input[0].strip()) < 3:
+                raise ValueError(f"At least 3 letters from Employee required")
+            elif len(trip_input[1].strip()) < 3:
+                raise ValueError(f"At least 3 letters from Destination required")
             elif validate_trip_data(trip_input):
-                print("Trip accepted, Logging details")
+                print("Trip details accepted, Logging it")
                 break
             # else:
             #     print(
             #         "Invalid Input Try Again \n ENTER  " +
             #         "Employee Name, Destination, dd/mm"
-            #         )
+            #         ) 
         except ValueError as e:
-                print(f"Invalid Data: {e} Please try again\n")
+                print(f"Invalid Input: {e} Please try again\n")
                 print(
-                    "    Enter     Employee Name, Destination, " +
+                    "    Enter Employee Name, Destination, " +
                     "Travel Date in dd/mm format\n" 
                     )
                 
@@ -143,9 +155,9 @@ def validate_trip_data(trip_input):
     DATE - needs to be valid date
 
     """
-    name_input = trip_input[0]
-    destination_input = trip_input[1]
-    date_input = trip_input[2]
+    name_input = trip_input[0].strip()
+    destination_input = trip_input[1].strip()
+    date_input = trip_input[2].strip()
     date_input_list = date_input.split("/")
     if verify_data(name_input, 'EngineSize'):
         if verify_data(destination_input, 'Distance'):
@@ -181,7 +193,7 @@ def verify_data(data_input, worksheet):
     data_column = data_worksheet.col_values(1)
     # 1st column in EngineSize worksheet contains employee names
     # 1st column in Distance worksheet contains destinations
-  
+
     if data_input.lower() in str(data_column).lower():
         return True
     else:
@@ -196,11 +208,12 @@ def create_trip_record(trip_input):
     STATUS SUBMITDATE NAME DESTINATION AMOUNT TRAVELDATE
     """
     # get full name and destination strings
-    trip_name = expand_data(trip_input[0], 'EngineSize')
-    trip_destination = expand_data(trip_input[1], 'Distance')
+    trip_name = expand_data(trip_input[0].strip(), 'EngineSize')
+    trip_destination = expand_data(trip_input[1].strip(), 'Distance')
 
     # convert dd/mm that was input to the gsheet date format
-    date_input_list = (trip_input[2]).split("/")
+    date_input_list = (trip_input[2].strip()
+    ).split("/")
     trip_date = date(
         2023, (int((date_input_list[1]))), (int((date_input_list[0])))
         ).strftime('%a %d %b %Y')
