@@ -81,19 +81,21 @@ def log_a_trip():  #  change this name
     valid_destinations = return_nth_column("Distance", 1)
     valid_destinations.pop(0)
   
-    print("Here you will need Employee Name, Destination & Date of travel" +
+    print("Here you will need Employee Name, Destination & Date of travel " +
           "to record the trip"
           "\n\n Authorised Employees are : " + 
           str(valid_employees).strip('[]').replace("'","") +
-          "\n Valid Destinations are : " + 
+          "\n Valid Destinations are   : " + 
           str(valid_destinations).strip('[]').replace("'","") +
-          "\n Date of Travel should be in format dd/mm, Example : 3/6 or 10/12"
-          "\nNOTES\n You do not need to enter the full name or destination, "+
-          "A substring of at least 3 letters of either will suffice"
-          "\n The App will expand the substring to its full format & " +
-          "It is NOT case sensitive so you can use upper or lowercase"
-          "\n\t Now enter the trip information separated by commas to log a trip"
-          "\n\t\t Employee Name, Destination, Travel Date in dd/mm format\n"
+          "\n NOTES\n\t You do not need to enter the full name or destination, "
+          "\n\t A substring of at least 3 letters of either will suffice"
+          "\n\t The App will expand the substring to its full format & " +
+          "\n\t It is NOT case sensitive so you can use upper or lowercase"
+
+          "\n\t Date of Travel should be in format dd/mm, Example : 3/6 or 10/12"
+          
+          "\n\n Now enter the trip information separated by commas to log a trip"
+          "\n\n Employee Name, Destination, Travel Date in dd/mm format\n"
           )
 
     while True:
