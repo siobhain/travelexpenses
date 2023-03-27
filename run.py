@@ -342,16 +342,19 @@ def run_pending_report():
     if number_pending > 0:
         print(f" There are {number_pending} awaiting approval")
         travel_expenses_ws = SHEET.worksheet("TravelExpenses")
-        all_trips = travel_expenses_ws.get_values('A:F')
+        all_trips = travel_expenses_ws.get_values('A:G')
+        print(all_trips)
         pending_trip = [
             trip for trip in all_trips if trip[0] == "Pending"
             ]
         heading = return_header_row("TravelExpenses")
-        print(f"\t{heading[2]}\t TO\t{heading[5][0:10]}   {heading[4]}")
+        print(f"\tID\t{heading[2]}\t TO\t{heading[5][0:10]}   {heading[4]}")
         for record in pending_trip:
             print(
-                f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
+                f"\t{record[6]}\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
                 )
+    # elif number_pending == 1:
+        # printf("There is one record awaiting approval")         
     else:
         print(" There are no records awaiting approval")
     return pending_trip
@@ -366,15 +369,15 @@ def run_approved_report():
     status_column = return_nth_column("TravelExpenses", 1)
     number_approved = status_column.count("Approved")
     if number_approved > 0:
-        print(f" There are {number_pending} Approved")
+        print(f" There are {number_approved} Approved")
         travel_expenses_ws = SHEET.worksheet("TravelExpenses")
-        all_trips = travel_expenses_ws.get_values('A:F')
+        all_trips = travel_expenses_ws.get_values('A:G')
         approved_trip = [
             trip for trip in all_trips if trip[0] == "Approved"
             ]
         for record in approved_trip:
             print(
-                f"\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
+                f"\t{record[6]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
                 )
     else:
         print(" There are no approved records")
@@ -389,7 +392,7 @@ def return_nth_column(worksheet_name, column_number):
     data = worksheet.col_values(column_number)
     return data
 
-def approves_pending_records():
+def approve_pending_records():
     """
     This function display all pending records to the user
     and gives them the choice of approving all together or
@@ -398,13 +401,23 @@ def approves_pending_records():
 
     pending_records = run_pending_report()
     number_pending = len(pending_records)
-    if number_pending > 1
+    if number_pending > 0:
         print(f"There are {number_pending} records")
         print("Do you want to approve all records at once?, Enter Y or N")
         answer = input()
         if "Y" in answer.upper():
-            print("All records Approved")
-        else for i < number_pending
+            print("get All records Approved")
+        else:
+            print("one by one")
+            i=0
+            while i < number_pending:
+                print("Change to approved")
+                print(pending_records[i])
+                i+=1
+    else:
+        print("There are no records to approve")
+
+
             
 
 
@@ -416,7 +429,8 @@ def main():
     # get choice back its type int 1 to 4
     while user_main_choice != 4:
         if user_main_choice == 3:
-            print("Manager Approvals")   
+            approve_pending_records()
+            print("Manager Approved")   
         elif  user_main_choice == 2:
             run_report_menu()
         elif user_main_choice == 1:
