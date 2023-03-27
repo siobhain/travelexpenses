@@ -68,27 +68,27 @@ def prompt_user(num):
             print(f" {e}, Please try again. \n")
     return int(user_choice)
 
-def log_a_trip():  #  change this name
+
+def log_a_trip():
     """
     Asks user to log a trip
     """
     print("\n CCD TRAVEL EXPENSE RECORDS 2023\n")
 
-    valid_employees = return_nth_column("EngineSize",1)
+    valid_employees = return_nth_column("EngineSize", 1)
     valid_employees.pop(0)
     valid_destinations = return_nth_column("Distance", 1)
     valid_destinations.pop(0)
-  
     print("Here you need Employee Name, Destination & Date of travel " +
           "to record the travel expense or trip"
           "\n\t Hints & Tips"
           "\n\t When inputting text you can use upper &/or lowercase,"
           "\n\t Enter firstname OR surname OR at least 3 letters from either."
-          "\n\t Its the same with destination - just 3 letters will suffice."          
-          "\n\n Authorised Employees are : " + 
-          str(valid_employees).strip('[]').replace("'","") +
-          "\n Valid Destinations are   : " + 
-          str(valid_destinations).strip('[]').replace("'","") +
+          "\n\t Its the same with destination - just 3 letters will suffice."
+          "\n\n Authorised Employees are : " +
+          str(valid_employees).strip('[]').replace("'", "") +
+          "\n Valid Destinations are   : " +
+          str(valid_destinations).strip('[]').replace("'", "") +
           "\n\n\t This Smart App will expand substrings to the full format!"
           "\n\t Date of Travel to be in format dd/mm, Ex : 3/6 or 25/10."
           "\n\t Reimbursement Amount"
@@ -102,11 +102,11 @@ def log_a_trip():  #  change this name
           )
 
     while True:
-        trip_input = get_trip_data()  
+        trip_input = get_trip_data()
         # data has been validated and verified at this stage
         record = create_trip_record(trip_input)
         headings = return_header_row("TravelExpenses")
-        view_record = dict(zip(headings,record))
+        view_record = dict(zip(headings, record))
         print("This record has been created from the information you entered ")
         pprint(view_record, sort_dicts=False)
         print("Are you happy to submit this to the database?, Y or N please")
@@ -119,7 +119,7 @@ def log_a_trip():  #  change this name
             break
         else:
             print("Enter Employee Name, Destination, Travel Date\n")
-    return    
+    return
 
 
 def get_trip_data():
@@ -133,22 +133,24 @@ def get_trip_data():
             if user_input == "":
                 raise ValueError("Input is blank")
             elif len(trip_input) != 3:
-                raise ValueError(f"3 items required")
+                raise ValueError("3 items required")
             elif len(trip_input[0].strip()) < 3:
-                raise ValueError(f"At least 3 letters from Employee required")
+                raise ValueError("At least 3 letters from Employee required")
             elif len(trip_input[1].strip()) < 3:
-                raise ValueError(f"At least 3 Destination letters required")
+                raise ValueError("At least 3 Destination letters required")
             elif validate_trip_data(trip_input):
                 print("Trip details are accepted, Constructing the record...")
                 break
-            else:   # This else should never be entered but in case there are use cases there are cases i ahve not catered for 
-                print(
-                    "Invalid Input Try Again \n ENTER  " +
-                    "Employee Name, Destination, Date of Travel"
-                    ) 
+# In theory the next else should not be entered but in the event there are
+# exception cases I have not thought about or catered for
+            # else:
+            #     print(
+            #         "Invalid Input Try Again \n ENTER  " +
+            #         "Employee Name, Destination, Date of Travel"
+            #         )
         except ValueError as e:
-                print(f"Invalid Input: {e} Please try again\n")
-                print("Enter Employee Name, Destination, Travel Date")
+            print(f"Invalid Input: {e} Please try again\n")
+            print("Enter Employee Name, Destination, Travel Date")
     return trip_input
 
 
@@ -166,25 +168,25 @@ def validate_trip_data(trip_input):
     date_input_list = date_input.split("/")
     if verify_data(name_input, 'EngineSize'):
         if verify_data(destination_input, 'Distance'):
-            if "/" in date_input and len(date_input) in range(3,6):
+            if "/" in date_input and len(date_input) in range(3, 6):
                 try:
-                    trip_date = date(
+                    date(
                         2023, int(date_input_list[1]), int(date_input_list[0])
                         )
                 except ValueError as e:
                     print(f"{date_input} is Invalid : {e}, Try Again, Enter")
                     print("Employee Name, Destination, Travel Date\n")
                     return False
-            else:       
-                print(f"Invalid date : {date_input}, Try Again, Please Enter")
+            else:
+                print(f"Invalid date : {date_input}, Try Again, Enter")
                 print("Employee Name, Destination, Travel Date\n")
-                return False 
+                return False
         else:
             print(f"Invalid Destination : {destination_input}, Try Again")
             print("Enter Employee Name, Destination, Travel Date\n")
             return False
     else:
-        print(f"Invalid Employee : {name_input}, Try Again, Please Enter")
+        print(f"Invalid Employee : {name_input}, Try Again, Enter")
         print("Employee Name, Destination, Travel Date\n")
         return False
     return True
@@ -217,9 +219,9 @@ def create_trip_record(trip_input):
     trip_name = expand_data(trip_input[0].strip(), 'EngineSize')
     trip_destination = expand_data(trip_input[1].strip(), 'Distance')
 
-    # convert dd/mm that was input to format held in gsheet
-    date_input_list = (trip_input[2].strip()
-    ).split("/")
+    # convert dd/mm that was input to format held in gsheet DB
+    date_input_list = trip_input[2].strip()
+
     trip_date = date(
         2023, (int((date_input_list[1]))), (int((date_input_list[0])))
         ).strftime('%a %d %b %Y')
@@ -267,7 +269,6 @@ def get_distance_in_km(destination):
     distance_column = distance_ws.col_values(2)
     destination_string = destination[0]
     row_number = destination_column.index(destination_string)
-    
     return distance_column[row_number]
 
 
@@ -286,9 +287,10 @@ def expand_data(data_input, worksheet):
     # print(f"FYI : You entered {data_input} which when parsed is {full_data}")
     return full_data
 
+
 def return_header_row(worksheet_name):
     """
-    This function returns the values of the 1st row of the worksheet send in 
+    This function returns the values of the 1st row of the worksheet send in
     """
     the_ws = SHEET.worksheet(worksheet_name)
     headings = the_ws.row_values(1)
@@ -322,7 +324,7 @@ def run_report_menu():
     while report_menu_choice != 3:
         if report_menu_choice == 2:
             print("\nList of Travel Expenses with Approved Status")
-            run_approved_report()  
+            run_approved_report()
         elif report_menu_choice == 1:
             print("\nList of Travel Expenses with Pending Status")
             run_pending_report()
@@ -330,7 +332,7 @@ def run_report_menu():
         report_menu_choice = prompt_user(3)
 
     return
-        
+
 
 def run_pending_report():
     """
@@ -358,11 +360,17 @@ def run_pending_report():
                 f"\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
                 )
     # elif number_pending == 1:
-        # printf("There is one record awaiting approval")  
-        print(f"\n SUMMARY : There are {number_pending} records with Pending status")       
+        # printf("There is one record awaiting approval")
+        print(
+            f"\n SUMMARY : There are {number_pending} " +
+            "records with Pending status"
+            )
     else:
         pending_trip = []
-        print(" NOTICE There are no records awaiting approval at this time (ie Pending)")
+        print(
+            " NOTICE There are no records awaiting approval at this time" +
+            " (ie No Pending records)"
+        )
     return pending_trip
 
 
@@ -391,10 +399,15 @@ def run_approved_report():
                 f"\t{record[-1]}\t  {record[1][0:10]}   {record[2]}" +
                 f"\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
             )
-        print(f"\n SUMMARY : There are {number_approved} records with Approved Status")          
+        print(
+            f"\n SUMMARY : There are {number_approved} records " +
+            "with Approved Status"
+            )
     else:
-        print(" NOTICE : There are no records with Approved Status at this time")
-    return 
+        print(
+            " NOTICE : There are no records with Approved Status at this time"
+            )
+    return
 
 
 def return_nth_column(worksheet_name, column_number):
@@ -404,6 +417,7 @@ def return_nth_column(worksheet_name, column_number):
     worksheet = SHEET.worksheet(worksheet_name)
     data = worksheet.col_values(column_number)
     return data
+
 
 def approve_pending_records():
     """
@@ -415,29 +429,36 @@ def approve_pending_records():
     pending_records = run_pending_report()
     number_pending = len(pending_records)
     if number_pending > 0:
-        print(f"There are {number_pending} records")
         print("Do you want to approve all records at once?, Enter Y or N")
         answer = input()
         if "Y" in answer.upper():
-            print("write fnct to get All records Approved")
-        else:
-            print("one by one")
-            i=0
+            i = 0
             travel_expenses_ws = SHEET.worksheet("TravelExpenses")
             while i < number_pending:
-                print("Do you approve Y or N")
+                row_number = pending_records[i][-1]
+                travel_expenses_ws.update_cell(
+                    int(row_number[5:]), 1,  "Approved"
+                        )
+                i += 1
+            print(f"{number_pending} records approved")      
+        else:
+            i = 0
+            travel_expenses_ws = SHEET.worksheet("TravelExpenses")
+            while i < number_pending:
+                print("Do you approve? Y or N")
                 print(pending_records[i])
                 answer = input()
-# ID # is prepended with 2023-##, ID is in last column or [-1] on a Python list               
-                row_number = pending_records[i][-1]  # Col G = record ID ie [6]
+# ID # is prepended with 2023-##, ID is in last column or [-1] on a Python list
+                row_number = pending_records[i][-1]
                 if "Y" in answer.upper():
                     travel_expenses_ws.update_cell(
                         # slice '2023-' from row_number
                         int(row_number[5:]), 1,  "Approved"
                         )
+                    print("Approved......next record")    
                 else:
                     print("Not approved...next rec")
-                i+=1
+                i += 1
     else:
         print("There are no records to approve")
 
@@ -451,15 +472,13 @@ def main():
     while user_main_choice != 4:
         if user_main_choice == 3:
             approve_pending_records()
-            print("End of Approve work this time")   
-        elif  user_main_choice == 2:
+            print("End of Approve work this time")
+        elif user_main_choice == 2:
             run_report_menu()
         elif user_main_choice == 1:
             log_a_trip()
         user_main_choice = get_main_menu()
-    
     print(" Goodbye")
-
 
 
 print("\nWelcome to CCD Travel Expenses - 2023 Log & Approvals")
