@@ -17,8 +17,6 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('ccd-travel-expenses')
 
-# emp = SHEET.worksheet('EngineSize')
-
 
 def get_main_menu():
     """
@@ -29,11 +27,11 @@ def get_main_menu():
     """
 
     main_menu = '''MAIN MENU
-        1) Enter 1 to Log a trip for travel expenses
-        2) Enter 2 to Generate a travel expenses report
-        3. Enter 3 to Approve travel expenses
-        4. Enter 4 to Exit
-        '''
+    1. Enter 1 to Log a trip for travel expenses
+    2. Enter 2 to Generate a travel expenses report
+    3. Enter 3 to Approve travel expenses
+    4. Enter 4 to Exit
+    '''
     print(main_menu)
     user_choice = prompt_user(4)
     return user_choice
@@ -320,10 +318,10 @@ def run_report_menu():
 
     while report_menu_choice != 3:
         if report_menu_choice == 2:
-            print("Manager Approvals")
+            print("\nList of Travel Expenses with Approved Status")
             run_approved_report()  
         elif report_menu_choice == 1:
-            print("Pending Report")
+            print("\nList of Travel Expenses with Pending Status")
             run_pending_report()
         print(report_menu)
         report_menu_choice = prompt_user(3)
@@ -340,24 +338,28 @@ def run_pending_report():
     status_column = return_nth_column("TravelExpenses", 1)
     number_pending = status_column.count("Pending")
     if number_pending > 0:
-        print(f" There are {number_pending} awaiting approval")
         travel_expenses_ws = SHEET.worksheet("TravelExpenses")
         all_trips = travel_expenses_ws.get_values('A:G')
-        print(all_trips)
         pending_trip = [
             trip for trip in all_trips if trip[0] == "Pending"
             ]
         heading = return_header_row("TravelExpenses")
-        print(f"\tID\t{heading[2]}\t TO\t{heading[5][0:10]}   {heading[4]}")
+        # Column header in spreadsheet used for most report headings
+        print(
+            f"\n\t{heading[-1]}\t  {heading[1]}   {heading[2]}\t\t TO" +
+            f"\t{heading[5][0:10]}   {heading[4]}"
+            )
         for record in pending_trip:
             print(
-                f"\t{record[6]}\t{record[2]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
+                f"\t{record[-1]}\t  {record[1][0:10]}   {record[2]}" +
+                f"\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
                 )
     # elif number_pending == 1:
-        # printf("There is one record awaiting approval")         
+        # printf("There is one record awaiting approval")  
+        print(f"\n SUMMARY : There are {number_pending} records with Pending status")       
     else:
         pending_trip = []
-        print(" There are no records awaiting approval")
+        print(" NOTICE There are no records awaiting approval at this time (ie Pending)")
     return pending_trip
 
 
@@ -370,18 +372,25 @@ def run_approved_report():
     status_column = return_nth_column("TravelExpenses", 1)
     number_approved = status_column.count("Approved")
     if number_approved > 0:
-        print(f" There are {number_approved} Approved")
         travel_expenses_ws = SHEET.worksheet("TravelExpenses")
         all_trips = travel_expenses_ws.get_values('A:G')
+        heading = return_header_row("TravelExpenses")
+        # Column header in spreadsheet used for most report headings
+        print(
+            f"\n\t{heading[-1]}\t  {heading[1]}   {heading[2]}\t\t TO" +
+            f"\t{heading[5][0:10]}   {heading[4]}"
+        )
         approved_trip = [
             trip for trip in all_trips if trip[0] == "Approved"
             ]
         for record in approved_trip:
             print(
-                f"\t{record[6]}\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
-                )
+                f"\t{record[-1]}\t  {record[1][0:10]}   {record[2]}" +
+                f"\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
+            )
+        print(f"\n SUMMARY : There are {number_approved} records with Approved Status")          
     else:
-        print(" There are no approved records")
+        print(" NOTICE : There are no records with Approved Status at this time")
     return 
 
 
@@ -407,7 +416,7 @@ def approve_pending_records():
         print("Do you want to approve all records at once?, Enter Y or N")
         answer = input()
         if "Y" in answer.upper():
-            print("get All records Approved")
+            print("write fnct to get All records Approved")
         else:
             print("one by one")
             i=0
@@ -416,10 +425,12 @@ def approve_pending_records():
                 print("Do you approve Y or N")
                 print(pending_records[i])
                 answer = input()
-                row_number = pending_records[i][6]  # Col G = record ID ie [6]
+# ID # is prepended with 2023-##, ID is in last column or [-1] on a Python list               
+                row_number = pending_records[i][-1]  # Col G = record ID ie [6]
                 if "Y" in answer.upper():
                     travel_expenses_ws.update_cell(
-                        int(row_number), 1,  "Approved"
+                        # slice '2023-' from row_number
+                        int(row_number[5:]), 1,  "Approved"
                         )
                 else:
                     print("Not approved...next rec")
