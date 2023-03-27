@@ -80,24 +80,25 @@ def log_a_trip():  #  change this name
     valid_destinations.pop(0)
   
     print("Here you need Employee Name, Destination & Date of travel " +
-          "to record the trip"
+          "to record the travel expense or trip"
+          "\n\t Hints & Tips"
+          "\n\t When inputting text you can use upper &/or lowercase,"
+          "\n\t Enter firstname OR surname OR at least 3 letters from either."
+          "\n\t Its the same with destination - just 3 letters will suffice."          
           "\n\n Authorised Employees are : " + 
           str(valid_employees).strip('[]').replace("'","") +
           "\n Valid Destinations are   : " + 
           str(valid_destinations).strip('[]').replace("'","") +
-          "\n\t PLEASE NOTE"
-          "\n\t You do not need to enter the full name or destination"
-          "\n\t A substring of at least 3 letters of either will suffice"
-          "\n\t The App will expand the substring to its full format & " +
-          "\n\t It is NOT case sensitive so you can use upper or lowercase"
-
-          "\n\t Date of Travel to be in format dd/mm, Examples : 3/6 or 10/12"
-          "\n\t The App will calculate reimbursement amount due to employee"
-          "\n\t based on distance travelled and car engine size, both these"
-          "\n\t figures are held in the database"
-          "\n\n Now Please Enter the trip information separated by commas " +
-          "in the following order"
-          "\n Employee Name, Destination, Travel Date in dd/mm format\n"
+          "\n\n\t This Smart App will expand substrings to the full format!"
+          "\n\t Date of Travel to be in format dd/mm, Ex : 3/6 or 25/10."
+          "\n\t Reimbursement Amount"
+          "\n\t The App will calculate the amount due to employee based on "
+          "\n\t distance travelled and car engine size, all this information "
+          "\n\t is already in the database (abeit a gsheet)"
+          "\n\t Each trip record you submit to database will be automatically "
+          "\n\t assigned a unique ID so go ahead now and enter the 3 items of"
+          "\n\t trip information separated by commas in the following order :"
+          "\n Employee Name, Destination, Date of Travel \n"
           )
 
     while True:
@@ -108,7 +109,7 @@ def log_a_trip():  #  change this name
         view_record = dict(zip(headings,record))
         print("This record has been created from the information you entered ")
         pprint(view_record, sort_dicts=False)
-        print("Are you happy to submit this record?, Y or N please")
+        print("Are you happy to submit this to the database?, Y or N please")
         answer = input()
         if "Y" in answer.upper():
             submit_trip_record(record)
@@ -116,9 +117,11 @@ def log_a_trip():  #  change this name
         answer = input()
         if "Y" not in answer.upper():
             break
+        else:
+            print("Enter Employee Name, Destination, Travel Date\n")
     return    
 
-    
+
 def get_trip_data():
     """
     Ask user to enter 3 items to record the trip
@@ -280,7 +283,7 @@ def expand_data(data_input, worksheet):
     full_data = [
         item for item in data_column if data_input.lower() in item.lower()
         ]
-    print(f"FYI : You entered {data_input} which when parsed is {full_data}")
+    # print(f"FYI : You entered {data_input} which when parsed is {full_data}")
     return full_data
 
 def return_header_row(worksheet_name):
@@ -300,7 +303,7 @@ def submit_trip_record(trip_details):
 
     travel_expenses_ws = SHEET.worksheet('TravelExpenses')
     travel_expenses_ws.append_row(trip_details)
-    print("Record submitted to database")
+    print("Record submitted!, Reimbursement will apply once trip is approved")
 
 
 def run_report_menu():
