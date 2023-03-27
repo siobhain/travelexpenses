@@ -194,8 +194,8 @@ def verify_data(data_input, worksheet):
     This function check if data is in worksheet, used for employee name
     and destination aa both in first column of worksheet
     """
-    data_worksheet = SHEET.worksheet(worksheet)
-    data_column = data_worksheet.col_values(1)
+    data_ws = SHEET.worksheet(worksheet)
+    data_column = data_ws.col_values(1)
     # 1st column in EngineSize worksheet contains employee names
     # 1st column in Distance worksheet contains destinations
 
@@ -276,8 +276,8 @@ def expand_data(data_input, worksheet):
     & matches with an existing data in spreadsheet
     and returns the full item/longhand stored in spreadsheet
     """
-    data_worksheet = SHEET.worksheet(worksheet)
-    data_column = data_worksheet.col_values(1)
+    data_ws = SHEET.worksheet(worksheet)
+    data_column = data_ws.col_values(1)
 
     full_data = [
         item for item in data_column if data_input.lower() in item.lower()
@@ -356,6 +356,7 @@ def run_pending_report():
     # elif number_pending == 1:
         # printf("There is one record awaiting approval")         
     else:
+        pending_trip = []
         print(" There are no records awaiting approval")
     return pending_trip
 
@@ -410,15 +411,21 @@ def approve_pending_records():
         else:
             print("one by one")
             i=0
+            travel_expenses_ws = SHEET.worksheet("TravelExpenses")
             while i < number_pending:
-                print("Change to approved")
+                print("Do you approve Y or N")
                 print(pending_records[i])
+                answer = input()
+                row_number = pending_records[i][6]  # Col G = record ID ie [6]
+                if "Y" in answer.upper():
+                    travel_expenses_ws.update_cell(
+                        int(row_number), 1,  "Approved"
+                        )
+                else:
+                    print("Not approved...next rec")
                 i+=1
     else:
         print("There are no records to approve")
-
-
-            
 
 
 def main():
@@ -430,7 +437,7 @@ def main():
     while user_main_choice != 4:
         if user_main_choice == 3:
             approve_pending_records()
-            print("Manager Approved")   
+            print("End of Approve work this time")   
         elif  user_main_choice == 2:
             run_report_menu()
         elif user_main_choice == 1:
@@ -440,7 +447,6 @@ def main():
     print(" Goodbye")
 
 
-    
 
 print("\nWelcome to CCD Travel Expenses - 2023 Log & Approvals")
 main()
