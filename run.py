@@ -316,10 +316,10 @@ def create_trip_record(trip_input):
     date_input_list = trip_input[2].strip()
     trip_date = date(
         2023, (int((date_input_list[1]))), (int((date_input_list[0])))
-        ).strftime('%a %d %b %Y')
+        ).strftime('%a %d %b')
 
     # today is the submit date
-    today = (date.today()).strftime('%a %d %b %Y')
+    today = (date.today()).strftime('%a %d %b')
     # retrieve the mileage allowance for the named employee
     rate_in_cent_per_km = get_milage_rate(trip_name)
     # retrieve the distance for the trip
@@ -455,12 +455,12 @@ def run_pending_report():
         # Column header in spreadsheet used for most report headings
         print(
             f"\n\t{heading[-1]}\t  {heading[1]}   {heading[2]}\t\t TO" +
-            f"\t{heading[5][0:10]}   {heading[4]}"
+            f"\t\t{heading[5][0:10]}   {heading[4]}"
             )
         for record in pending_trip:
             print(
                 f"\t{record[-1]}\t  {record[1][0:10]}   {record[2]}" +
-                f"\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
+                f"\t{record[3]}\t\t{record[5][0:10]}   €{record[4]}"
                 )
     # elif number_pending == 1:
         # printf("There is one record awaiting approval")
@@ -492,7 +492,7 @@ def run_approved_report():
         # Column header in spreadsheet used for most report headings
         print(
             f"\n\t{heading[-1]}\t  {heading[1]}   {heading[2]}\t\t TO" +
-            f"\t{heading[5][0:10]}   {heading[4]}"
+            f"\t\t{heading[5][0:10]}   {heading[4]}"
         )
         approved_trip = [
             trip for trip in all_trips if trip[0] == "Approved"
@@ -500,7 +500,7 @@ def run_approved_report():
         for record in approved_trip:
             print(
                 f"\t{record[-1]}\t  {record[1][0:10]}   {record[2]}" +
-                f"\t{record[3]}\t{record[5][0:10]}   €{record[4]}"
+                f"\t{record[3]}\t\t{record[5][0:10]}   €{record[4]}"
             )
         print(
             f"\n SUMMARY : There are {number_approved} records " +
