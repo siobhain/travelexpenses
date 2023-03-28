@@ -320,7 +320,7 @@ def create_trip_record(trip_input):
         ).strftime('%a %d %b')
 
     # today is the submit date
-    today = (date.today()).strftime('%a %d %b')
+    today = (date.today()).strftime('%d %b')
     # retrieve the mileage allowance for the named employee
     rate_in_cent_per_km = get_milage_rate(trip_name)
     # retrieve the distance for the trip
