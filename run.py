@@ -134,15 +134,15 @@ def log_travel_expenses_trips():
     valid_employees.pop(0)
     valid_destinations = return_nth_column("Distance", 1)
     valid_destinations.pop(0)
-    print("Here you need Employee Name, Destination & Date of travel " +
+    print("You need Employee Name, Destination & Travel Date " +
           "to record the travel expense or trip"
           "\n\t Hints & Tips"
           "\n\t When inputting text you can use upper &/or lowercase,"
           "\n\t Enter firstname OR surname OR at least 3 letters from either."
           "\n\t Its the same with destination - just 3 letters will suffice."
-          "\n\n Authorised Employees are : " +
+          "\n\n Authorised Employees are :\n" +
           str(valid_employees).strip('[]').replace("'", "") +
-          "\n Valid Destinations are   : " +
+          "\n Valid Destinations are   :\n" +
           str(valid_destinations).strip('[]').replace("'", "") +
           "\n\n\t This Smart App will expand substrings to the full format!"
           "\n\t Date of Travel to be in format dd/mm, Ex : 3/6 or 25/10."
@@ -313,7 +313,8 @@ def create_trip_record(trip_input):
     trip_destination = expand_data(trip_input[1].strip(), 'Distance')
 
     # convert dd/mm that was input into database/gsheet format
-    date_input_list = trip_input[2].strip()
+    date_input = trip_input[2].strip()
+    date_input_list = date_input.split("/")
     trip_date = date(
         2023, (int((date_input_list[1]))), (int((date_input_list[0])))
         ).strftime('%a %d %b')
