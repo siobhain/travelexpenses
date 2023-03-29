@@ -118,6 +118,42 @@ set the buildbacks to Python and NodeJS in that order
 Link rhe Heroku app to the repo
 click on deploy
 
+This application uses Heroku for deployment
+
+Create the application
+First create the requirements file the Heroku will use to import the dependencies required for deployment: type pip3 freeze > requirements.txt. For this project the requirements.txt file is empty as no libraries or modules were imported other than from the standard python library.
+Navigate to the Heroku website
+create an account by entering your email address and a password
+Activate the account through the authentication email sent to your email account
+Click the new button and select create a new app from the dropdown menu
+Enter a name for the application which must be unique, in this case the app name is after-the-party
+Select a region, in this case Europe
+Click create app
+Heroku settings
+From the horizontal menu bar select 'Settings'.
+In the buildpacks section, where further necessary dependencies are installed, click 'add buildpack'. Select 'Python' first and click 'save changes'. Next click 'node.js' and then click 'save changes' again. The 'Python' buildpack must be above the 'node.js' buildpack'. They can be clicked on and dragged to change the order if necessary.
+Deployment
+In the top menu bar select 'Deploy'.
+In the 'Deployment method' section select 'Github' and click the connect to Github button to confirm.
+In the 'search' box enter the Github repository name for the project. Click search and then click connect to link the heroku app with the Github repository. The box will confirm that heroku is connected to the repository which in this case is After the Party.
+Scroll down to select either automatic or manual deployment. For this project automatic deployment was selected. If you wish to choose automatic deployment select the button 'Enable Automatic Deploys'. This will rebuild the app every time a change is pushed to Github. If you wish to manually deploy click the button 'Deploy Branch'. The default 'Master' option in the dropdown menu should be selected in both cases.
+When the app is deployed a message 'Your app was successfully deployed' will be shown. Click 'view' to see the deployed app in the browser. The live deployment of the project can be seen here
+The app starts automatically and can be restarted by pressing the 'Run Program' button.
+Forking the Repository
+If you wish to fork the repository to make changes without affecting the original you can fork the repository
+
+Navigate to the After the Party repository
+Click the 'Fork' button at the top right of the page.
+A forked copy of the repository will appear in your Repositories page.
+Cloning the Repository
+On Github navigate to the main page of the After the Party.
+Above the list of files click the dropdown code menu.
+Select the https option and copy the link.
+Open the terminal.
+Change the current working directory to the desired destination location.
+Type the git clone command with the copied URL: git clone https://github.com/siob
+Press enter to create the local clone.
+
 ## TEchnology used
 
 gspread - allows communication with google sheets
