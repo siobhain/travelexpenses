@@ -1,18 +1,23 @@
 
 # CCD Travel Expenses Console App
 
-Python Console app that automates logging and approval of CCD travel expenses using api to a gspread sheet.  CCD is a ficticious SME.
-
- pip3 install gspread google-auth dependencies that had to be installed
+It is a Python Console app that automates logging, reporting & approval of CCDs' travel expenses using an api to a gspread sheet.  CCD is an SME which reimburses 4 employees for travel expenses when they use their private car for business purposes. This occurs on an irregular basis & does not go above the tax free threshold.
 
 ## Introduction
-mileage rates
-reimbursement to employee for work travel
-payment can be made tax free by the amoutn of business km travelled, journeys to/from home cannot be clainmed as mileage.
-There is a maximum mileage allowance per kilometre that the employer can reimburse tax-free. The mileage allowance rates depend on the type of vehicle. These maximum amounts are based on the Civil Service rates and can be found on the website of the Irish Revenue. Cars Motor travel rates 
 
-CCD is a fictional SME which reimburse 4 employees when they use their private car for business purposes. They follow the Civil Service rates from www.revenue.ie. The rate per KM is dependant on the engine size of the employees' car.
-This payment can be made, tax free, by the amount of business kilometres travelled. You can either:
+There are 4 staff at CCD who use their own private car for CCD related business travel to some 6 predefined locations.  CCD follow the Civil Service rates from www.revenue.ie. The rate per KM is dependant on the engine size of the employees' car. The rate is taken from Band 1 of the table as annual claims per employee are under 1000km.  The reimbursement can be made, tax free, by the amount of business kilometres travelled. Rats are outline in the table below.
+
+<!-- Civil Service Mileage or Motoring Rates : -->
+
+![Civil Service Motoring Rates](docs/revenue-milage-rates.PNG )
+
+The distance per location, rates per engine size & Reimbursement amount per location per car engine size are outlined below, This table was helpful when testing the app for correct calculations of amounts.
+
+It seems that although there is widespread conversion to metric the term 'mileage rate' is still widely used when actually meaning rate per kilometer. If you come across this term in this README or code comments then its meaning is actually rate per kilometer.
+
+![Amounts](docs/ci-amounts.PNG)
+
+Below is the initial work flow envisaged when starting work on this project.
 
 ![Inital Flowchart](docs/flowchart.PNG)
 
@@ -46,7 +51,8 @@ for this implementation of the travel expenses i ahve planned the following feat
 ## Features
 existing & future
 ## Data Model
-A google sheet was used to store the trips. The sheet consists of 3 worksheets, "Employee", "Distance" & "Trip".  Employee and Distance are static worksheet that give python information needed to calculate the reimbursment amount per trip. Trip is dynamic worksheet updated via the console in 2 seperate processes.  First trip details entered via console. 2nd Trip approved by manager so reimbursment can be arranged.
+
+A google sheet is used to store the trips. The sheet consists of 3 worksheets, "Employee", "Distance" & "Trip".  Employee and Distance are static worksheets that give python information needed to calculate the reimbursment amount per trip. Trip is dynamic worksheet updated via the console in 2 separate processes.  First trip details entered via console which adds a new travel expense record to the worksheet, There is a unique ID assigned to each record & held in the last/G column of the worksheet, This ID is automatically added by the spreadsheet. The 2nd type of update is when travel expense/expenses are approved by an manager and they go from ahvving a "Pending" status to "Approved" status in the first/A column.
 
 datasheets prepopulated .. status data...authorised employees authorised destinations
 #### NOTES
@@ -165,7 +171,7 @@ lucid - flow charts
 
 Gspread documentation https://docs.gspread.org/en/v5.7.0/
 CI for the mock terminal
-
+www.revenue.ie Motoring Rates fo trravel exoenses calculations
 
 
 ## Reminders
@@ -186,7 +192,7 @@ You must then create a _Config Var_ called `PORT`. Set this to `8000`
 If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
 
 Connect your GitHub repository and deploy as normal.
-
+pip3 install gspread google-auth dependencies that had to be installed
 ## Constraints
 
 The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
