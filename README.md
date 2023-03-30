@@ -5,17 +5,19 @@ It is a Python Console app that automates logging, reporting & approval of CCDs'
 
 ## Introduction
 
-There are 4 staff at CCD who use their own private car for CCD related business travel to some 6 predefined locations.  CCD follow the Civil Service rates from www.revenue.ie. The rate per KM is dependant on the engine size of the employees' car. The rate is taken from Band 1 of the table as annual claims per employee are under 1000km.  The reimbursement can be made, tax free, by the amount of business kilometres travelled. Rats are outline in the table below.
+There are 4 staff at CCD who use their own private car for CCD related business travel to some 6 predefined locations.  CCD follow the Civil Service rates from www.revenue.ie. The rate per KM is dependant on the engine size of the employees' car. The rate is taken from Band 1 of the table as annual claims per employee are under 1000km.  The reimbursement can be made, tax free, by the amount of business kilometres travelled. Rates are outline in the table below.
 
 <!-- Civil Service Mileage or Motoring Rates : -->
 
 ![Civil Service Motoring Rates](docs/revenue-milage-rates.PNG )
 
-The distance per location, rates per engine size & Reimbursement amount per location per car engine size are outlined below, This table was helpful when testing the app for correct calculations of amounts.
+The app is just for 2023 so the year is not taken into account for this MVP.  The distance per location, rates per engine size & Reimbursement amount per location per car engine size are outlined in the table below, This table was helpful when testing the app for correct calculations of reimbursement amounts.
+
+![Amounts](docs/ci-amounts.PNG)
 
 It seems that although there is widespread conversion to metric the term 'mileage rate' is still widely used when actually meaning rate per kilometer. If you come across this term in this README or code comments then its meaning is actually rate per kilometer.
 
-![Amounts](docs/ci-amounts.PNG)
+## DESIGN
 
 Below is the initial work flow envisaged when starting work on this project.
 
@@ -50,6 +52,8 @@ As a user I want to...
 
 ## Features
 
+### Main Menu
+
 Main menu has 4 options as follows
 
 ![Main Menu](docs/mainmenu.PNG)
@@ -66,6 +70,44 @@ The user at this stage can pick one of 3 choice to do something or #4 to exit th
 Chosing #1 will bring the user to the following screen
 
 ![Main Menu Option 1](docs/mainmenu-option1.PNG)
+
+
+### Log Travel Expense(s) (Trip)
+
+The 1st time user is presented with a screenful of information to assist in submitting travel expenses, There are restrictions such as only 4 employees can submit an expense and there are 6 locations approved, These details are held in the gsheet and displayed to the user in the first couple of lines. In order to make it easier for the user to enter a trip the app converts all inputdata comparasions to lowercase so it is case insensitive,  the user is advised of this and can use preferred case.  The user is also advised that if they can give just 3 letters of either the first name or surname of the employee, the app will be able to expand those 3 letters to the full employee name.  It does the same with destination & due to similarities i was able to condense this to one function called `expand_data()`.  The user is informed about how the reimbursement amount is calculated and that there is a unique identifier (NUM-ID) for each travel expense.  Below are some examples of  entering valid travel expense records 
+
+![tara-to-kings](docs/tara-to-kings.PNG)
+![ber-to-qua](dquaocs/tara-to-brown.PNG)
+![ann-to-fab](docs/tara-to-brown.PNG)
+![ann-to-new](docs/tara-to-brown.PNG)
+
+
+
+#### Error Handling for Logging a trip
+There are 3 items input to log a trip - Who goes on the trip, Where do they go & the when. Each item has its own restrictions, such as who needs to be one of the 4 authorised employees, Destination needs to be one of 6 locations and the date - entered in dd/mm format -  needs to be a valid date month combination.  Here are examples of incorrect Employee, incorrect destination  & incorrect date :
+
+![Invalid Trip](docs/invalid-trips.PNG)
+
+A `ValueError` is raised if user inputs less than 3 letters for either the employee or destination, or if there is less than 3 items input or if the user just pressed return, see examples below
+
+![Invalid Trip2](docs/invalid-trips2.PNG)
+
+#### Seek users approval before submitting record 
+
+Once the users input is accepted the app will construct a 'travel expense record' and seek the users approval before it is entered into the database.  This also give the user reimbursement amount for the first time. User has the option to say no to submitting to database.
+
+![tara record](docs/tara-to-brown.PNG)
+
+#### Enter Another Record
+
+User can repeat entering travel expense records and when finished will be returned to main menu.  Again the y/n responses are not case sensitive.
+
+
+![tara record](docs/trip-return-main-menu.PNG)
+
+
+
+
 
 
 
