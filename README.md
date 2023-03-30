@@ -21,35 +21,68 @@ Below is the initial work flow envisaged when starting work on this project.
 
 ![Inital Flowchart](docs/flowchart.PNG)
 
+### SCOPE
+For this implementation of the travel expenses I have planned the following features
+
+* Allow user to enter travel expenses in as easy a way as possible & calculate amount to be reimbursed for each trip
+* Display warning/error when user enters invalid input & hints as to what is valid
+* Allow user to list the approved travel expenses and the list awaiting approval
+* Allow manager to approve travel expenses in individual or group (Note as I will not be implementing user login, manager & user are not  distinguisable)
+
 ## Goal = UX/UX + user story
 
-*  the app should eb easy to navigate
-* info that appears on terminal should eb relevent to what user is doing at that time
-* instruction should help the user what info is to be entered
-*  the releven worksheets should be accessed when needed
-* the trip worksheet should eb updated with correct values
-* the reports shouls list the correct records
+*  the app should be easy to get around
+*  info that appears on terminal should be relevent to what user is doing at that time
+*  instruction should help the user determine what information is to be entered
+*  the trip worksheet should be updated with correct values
+*  the reports should list the correct records
 
 ### User stories 
 
-as a user i want to...
+As a user I want to...
 
 * be able to submit a travel expenses record easily
 * I want to know reimbursement amount
-* Add several records in a row
-* run report to see what i just entered
-* run report to see whats already on datasheet for this month
-* see how much travel expenses are by month
+* add several records in a row
+* run report to see what I entered
+* run report to see whats already on database
 * see how many are awaiting approval
 
-### SCOPE
-for this implementation of the travel expenses i ahve planned the following features
-* display warning/error when user enters invalid input
-* app to calculate amoutn for each trip
-
-
 ## Features
-existing & future
+
+Main menu has 4 options as follows
+
+![Main Menu](docs/mainmenu.PNG)
+
+The only acceptable user input at this stage is a number between 1 and 4 whitespace is stripped with `replace(" ", "")`,  Any other input is not accepted and user is advised accordingly, for instance blank input, non numeric input, numerics out of range... 
+
+![Main Menu Wrong Input](docs/mainmenu-wrong-input.PNG)
+
+The user at this stage can pick one of 3 choice to do something or #4 to exit the program.  The 3 options are
+    1. To Log travel expense(s)
+    2. To generate travel expense report(s)
+    3. To approve travel expense(s)
+
+Chosing #1 will bring the user to the following screen
+
+![Main Menu Option 1](docs/mainmenu-option1.PNG)
+
+
+
+
+
+
+## Future Goals
+
+Import colorama to give red color to error text, yellow color to informtion text etc
+Expand the "Log" section to allow user to enter travel expenses for employees and locations not pre defined.
+Expand the reports section to list travel expenses by month, destination & employee, giving subtotals etc where appropriate.
+Expand the reports section to summarise travel expenses ie total monthly reimbursement etc
+Implement a user login with an audit trail
+Implement manager login that is only user allowed to approve expenses    
+
+
+
 ## Data Model
 
 A google sheet is used to store the trips. The sheet consists of 3 worksheets, "Employee", "Distance" & "Trip".  Employee and Distance are static worksheets that give python information needed to calculate the reimbursment amount per trip. Trip is dynamic worksheet updated via the console in 2 separate processes.  First trip details entered via console which adds a new travel expense record to the worksheet, There is a unique ID assigned to each record & held in the last/G column of the worksheet, This ID is automatically added by the spreadsheet. The 2nd type of update is when travel expense/expenses are approved by an manager and they go from ahvving a "Pending" status to "Approved" status in the first/A column.
