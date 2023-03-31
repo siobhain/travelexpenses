@@ -106,6 +106,38 @@ User can repeat entering travel expense records and when finished will be return
 ![tara record](docs/trip-return-main-menu.PNG)
 
 
+### Report Menu
+
+![report menu](docs/reportmenu.PNG)
+![pending report](docs/pendingreport.PNG)
+![approved report](docs/approvedreport.PNG)
+![report to main menu](docs/report-to-main.PNG)
+
+
+### Approvals Section
+
+Sometimes there is no work to do!!
+
+![no records to approve](docs/no-records-to-approve.PNG)
+
+![no records to report](docs/norecords-toreport.PNG)
+
+Example of records to approve
+
+![5-recs to approve](docs/5-recs-to-approve.PNG)
+![every 2nd](docs/every2nd.PNG)
+
+![3rd approve](docs/3rd-approve.PNG)
+
+![approve all](docs/approvalall.PNG)
+
+
+
+
+
+
+
+
 
 
 
