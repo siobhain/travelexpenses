@@ -72,7 +72,7 @@ Fields : `STATUS	 SUBMITDATE	EMPLOYEE	  DESTINATION	AMOUNT	TRAVELDATE	ID-NUM`
 
 
 #### Design Notes/observations
-Itn this app here was not an use case for using creating Class structures so there are no OOP structures as I deemed it not appropriate for this project.
+In this app here was not an use case for using creating Class structures so there are no OOP structures as I deemed it not appropriate for this project.
 There is  CRUD  functionality in the creating, reporting on and updating the travel expense records & Custom error handling has been applied to majority of the datat input.  Unfortunatley due to time restrainst I unable to apply error and exception handling to the Y/N user input.  If there is a Y anywhere in the input it is taken as a Yes and anythiong else is treated as No.
 
 ## Goal 
@@ -210,7 +210,7 @@ Example of records to approve
 
 ### User stories Testing
 
-All User sTores tested and passed
+All User Stores tested and passed
 
 * be able to submit a travel expenses record easily : Tested extensively with valid and invalid data
 * I want to know reimbursement amount : Tested Calculations & all are correct
@@ -219,10 +219,7 @@ All User sTores tested and passed
 * run report to see whats already on database : User can run Approved report, option 2 from main menu then option 2 again from report menu
 * see how many are awaiting approval : option 3 on main menu and passed tests
 
-All function were tested in gitpod before deployment.
-At times here were some new functionality/ideas was explored in python visualizer before incorporating into run.py
-
-#### manual
+#### Manual Testing
 
 All function were tested in gitpod before deployment.
 At times here were some new functionality/ideas was explored in python visualizer before incorporating into run.py
@@ -233,7 +230,7 @@ PEP8 - no errors returned from pep8online.com
 
 ![python linter](docs/python-linter.PNG)
 
-
+---
 ## Deployment
 
 This application uses Heroku for deployment, To setup Heroku you need to do the following
@@ -255,7 +252,7 @@ Steps
 1. Set the buildbacks to Python and NodeJS in that order
 1. Link the Heroku app to the repo
 1. Click on deploy
-
+---
 ## Technology used
 
 * Python with datetime & pprint standard libraries
@@ -263,7 +260,7 @@ Steps
 * Github & Heroku for deployment
 * google.oauth2.service_account : Credentials : used to validate and grant access to google service accounts
 * lucid - flow charts
-
+---
 ## Credits
 
 * Code Institute LMS, & Slack Channels
