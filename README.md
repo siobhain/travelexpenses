@@ -2,7 +2,7 @@
 # CCD Travel Expenses Console App
 A Python Console app that automates logging, reporting & approval of CCDs' travel expenses using an api to a gspread sheet.  
 
-CCD is an SME which reimburses  certain mployees for travel expenses when they use their private car for business purposes. This occurs on an irregular basis & does not go above the tax free threshold.
+CCD is an SME which reimburses  certain employees for travel expenses when they use their private car for business purposes. This occurs on an irregular basis & does not go above the tax free threshold.
 
 ## Introduction
 
